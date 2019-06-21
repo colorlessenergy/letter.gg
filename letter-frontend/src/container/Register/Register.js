@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { registerAction } from '../../store/actions/authActions';
 
 class Register extends Component {
   state = {
@@ -9,7 +11,9 @@ class Register extends Component {
 
   handleSubmit = (ev) => {
     ev.preventDefault();
+
     console.log('register successful', this.state);
+    this.props.register(this.state);
   }
 
   handleChange = (ev) => {
@@ -21,6 +25,8 @@ class Register extends Component {
   }
 
   render () {
+    const { authError } = this.props;
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div>
@@ -55,10 +61,26 @@ class Register extends Component {
 
         <div>
           <button>Register</button>
+          { authError ? <p>{ authError } </p> : null }
         </div>
       </form>
     )
   }
 }
 
-export default Register;
+const mapStateToProps = (state) => {
+  return{ 
+    ...state,
+    authError: state.auth.authError
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    register: (credentials) => {
+      return dispatch(registerAction(credentials));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
