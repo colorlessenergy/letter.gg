@@ -16,7 +16,7 @@ function App() {
           Letter.gg
         </h1>
       </div>
-      <Link to='/home'>Register</Link>
+      <Link to='/home'>home</Link>
       <Link to='/register'>Register</Link>
       <Link to='/login'>Login</Link>
       <Link to='/build'>Build</Link>
