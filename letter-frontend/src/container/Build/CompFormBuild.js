@@ -12,7 +12,7 @@ class CompFormBuild extends Component {
   componentDidMount() {
     let initChampions = this.state.champions.map((champion) => {
       return champion;
-    })
+    });
 
     this.setState({
       filteredChampions: initChampions
@@ -23,7 +23,9 @@ class CompFormBuild extends Component {
   handleChange = (ev) => {
     if (ev.target.value !== "") {
       let filteredChampions = this.state.champions.filter((item) => {
-        return item.display.includes(ev.target.value)
+        // adding .toLowerCase() to champion because it wouldn't
+        // filter champions properly
+        return item.display.includes(ev.target.value.toLowerCase())
       });
 
       this.setState({
@@ -60,7 +62,7 @@ class CompFormBuild extends Component {
       this.props.handleChange({
         comp: this.state.pickedChampions
       })
-    })
+    });
   }
 
   render() {
@@ -77,8 +79,8 @@ class CompFormBuild extends Component {
           //   { champion.display }
           // </p>
           <img onClick={this.handleItemClick} id={champion.lookUp} key={champion.display} src={championIcon} alt={champion.display} />
-        )
-      })
+        );
+      });
     } else {
       displayedChampions = null;
     }
@@ -90,8 +92,8 @@ class CompFormBuild extends Component {
         const championIcon = require(`../../assets/champion-icons/${champion}.png`);
         return (
           <img onClick={this.handleRemoveItem} key={index} id={index} src={championIcon} alt={champion} />
-        )
-      })
+        );
+      });
     } else {
       pickedChampions = null;
     }

@@ -10,14 +10,14 @@ class ContentFormBuild extends Component {
       [ev.target.id]: ev.target.value
     });
 
-    // lift the state of the textarea to the main component to be able to save to a database
+    // lift the state of this component to the main component to be able to save to a database
     this.props.handleChange({ [ev.target.id]: ev.target.value });
   }
 
   render () {
     return (
       <React.Fragment>
-        <label htmlFor='content'> </label>
+        <label htmlFor='content'></label>
         <textarea 
           id='content'
           value={this.state.content}
