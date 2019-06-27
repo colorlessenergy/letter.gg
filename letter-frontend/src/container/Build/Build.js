@@ -5,6 +5,10 @@ import ItemFormBuild from './ItemsFormBuild';
 import CompFormBuild from './CompFormBuild';
 import ContentFormBuild from './ContentFormBuild';
 
+import { createBuildAction } from '../../store/actions/buildsAction';
+
+import { connect } from 'react-redux';
+
 class Build extends Component {
   state = {
     title: '',
@@ -23,7 +27,10 @@ class Build extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
 
-    console.log(this.state);
+    this.props.createBuild(this.state);
+
+    console.log(this.props)
+    this.props.history.push('/');
   }
 
   render () {
@@ -49,4 +56,19 @@ class Build extends Component {
   }
 }
 
-export default Build;
+const mapStateToProps = (state) => {
+  return {
+    builds: state.builds.builds
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  console.log('dispatching action to create a build in BUILD.JS')
+  return {
+    createBuild: (build) => {
+      return dispatch(createBuildAction(build))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Build);

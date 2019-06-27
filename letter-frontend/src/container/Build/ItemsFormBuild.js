@@ -22,7 +22,9 @@ class ItemsFormBuild extends Component {
 
   handleChange = (ev) => {
     let filteredItems = this.state.items.filter((item) => {
-      return item.display.includes(ev.target.value)
+       // adding .toLowerCase() to champion because it wouldn't
+      // filter champions properly
+      return item.display.includes(ev.target.value.toLowerCase());
     });
 
     this.setState({

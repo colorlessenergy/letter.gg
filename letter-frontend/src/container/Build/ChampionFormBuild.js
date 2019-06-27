@@ -24,7 +24,9 @@ class ChampionFormBuild extends Component {
   handleChange = (ev) => {
     // filter the champs by what the user typed
     let filterdChamps = this.state.champions.filter((champion) => {
-      return champion.display.includes(ev.target.value);
+      // adding .toLowerCase() to champion because it wouldn't
+      // filter champions properly
+      return champion.display.includes(ev.target.value.toLowerCase());
     });
 
     console.log(ev.target.value);
@@ -47,14 +49,14 @@ class ChampionFormBuild extends Component {
     const championIcon = require(`../../assets/champion-icons/${ev.target.id}.png`);
 
     this.setState({
-      champion: ev.target.alt,
+      champion: ev.target.id,
       filterChampions: [],
       imageURL: championIcon
     });
 
     // pass the state of the champion to the parent
     this.props.handleChange({
-      champion: ev.target.alt,
+      champion: ev.target.id,
     });
 
   }
