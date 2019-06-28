@@ -6,19 +6,12 @@ const buildReducer = (state=initState, action) => {
   switch (action.type) {
     case 'CREATE_BUILD':
       console.log('creating build in buildsReducer.js', action)
-      return {
-        ...state,
-        builds: [...state.builds, action.build]
-      }
+      return state;
 
+    case 'CREATE_BUILD_ERROR':
+      console.log('there was an error', action.err)
+      return state;
 
-    case 'GET_BUILDS':
-      console.log('fetching builds in buildReducer.js', action);
-
-      return {
-        ...state,
-        builds: [...state.builds]
-      }
     default:
       return state
   }
