@@ -2,11 +2,13 @@ export const createBuildAction = (build) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     console.log('creating build');
     const firestore = getFirestore();
+    const profile = getState().firebase.profile;
+    const authorId = getState().firebase.auth.uid
 
     firestore.collection('builds').add({
       ...build,
-      creator: 'Brian',
-      authorId: 1234,
+      creator: profile.username,
+      authorId: authorId,
       createdAt: new Date()
     })
     .then(() => {
@@ -16,13 +18,5 @@ export const createBuildAction = (build) => {
       dispatch({ type: 'CREATE_BUILD_ERROR', err });
     });
 
-  }
-}
-
-export const getBuildsAction = () => {
-  return (dispatch, getState) => {
-    console.log('fetching build');
-    
-    dispatch({ type: 'GET_BUILDS' })
   }
 }

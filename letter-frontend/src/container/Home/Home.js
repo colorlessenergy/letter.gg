@@ -6,17 +6,19 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
 import { Link } from 'react-router-dom'
-
+/**
+ * display all the builds
+ */
 class Home extends Component {
 
   render () {
     let builds = this.props.builds ? (
-      this.props.builds.map((build) => {
+      this.props.builds.map((build, index) => {
         console.log(build);
         let championIcon = require(`../../assets/champion-icons/${build.champion}.png`)
         return (
-          <Link to={'/build/' + build.id}>
-            <section key={build.champion}>
+          <Link to={'/build/' + build.id} key={index}>
+            <section>
               <h2>[{build.champion}] - {build.title}</h2>
               <img src={championIcon} alt={build.champion} />
               {build.items.map((item) => {
@@ -58,6 +60,6 @@ export default compose(
   // when firestore changes or component load sync the state
   //  of firestore with this component state
   firestoreConnect([
-    { collection: 'builds' }
+    { collection: 'builds', orderedBy: ['createdAt', 'desc'] }
   ])
 )(Home);

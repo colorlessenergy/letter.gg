@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loginAction } from '../../store/actions/authActions';
+import { Redirect } from 'react-router-dom'
+
 
 class Login extends Component {
   state = {
@@ -11,7 +13,6 @@ class Login extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
     
-    console.log('login successful', this.state);
     this.props.login(this.state);
   }
 
@@ -20,13 +21,13 @@ class Login extends Component {
       [ev.target.id]: ev.target.value
     });
 
-
-    console.log(this.state);
   }
 
   render () {
-    const  { authError } = this.props;
-    
+    const  { authError, auth } = this.props;
+
+    if (auth.uid) return <Redirect to='/' />
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div>
@@ -60,8 +61,10 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state)
   return {
-    authError: state.auth.authError
+    authError: state.auth.authError,
+    auth: state.firebase.auth
   }
 }
 
