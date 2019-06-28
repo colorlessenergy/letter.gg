@@ -8,6 +8,13 @@ import ContentFormBuild from './ContentFormBuild';
 import { createBuildAction } from '../../store/actions/buildsAction';
 
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
+
+/**
+ * this is the form to create a build
+ * 
+ */
 
 class Build extends Component {
   state = {
@@ -29,11 +36,14 @@ class Build extends Component {
 
     this.props.createBuild(this.state);
 
-    console.log(this.props)
     this.props.history.push('/');
   }
 
   render () {
+    const { auth } = this.props;
+
+    if (!auth.uid) return <Redirect to='/login' />
+
     return (
       <form onSubmit={this.handleSubmit}>
         <h2>pick a title</h2>
@@ -58,7 +68,7 @@ class Build extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    builds: state.builds.builds
+    auth: state.firebase.auth
   }
 }
 
