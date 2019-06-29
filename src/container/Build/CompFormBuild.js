@@ -52,7 +52,7 @@ class CompFormBuild extends Component {
   handleRemoveItem = (ev) => {
     let arr = this.state.pickedChampions.filter((champ, index) => {
       console.log(index, ev.target.id)
-      return index != ev.target.id;
+      return index !== Number(ev.target.id);
     });
 
 
