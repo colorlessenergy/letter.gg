@@ -47,7 +47,7 @@ class ItemsFormBuild extends Component {
   handleRemoveItem = (ev) => {
     let arr = this.state.pickedItems.filter((item, index) => {
       console.log(index, ev.target.id)
-      return index != ev.target.id;
+      return index !== Number(ev.target.id);
     });
 
     console.log(arr);
