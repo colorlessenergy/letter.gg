@@ -1,8 +1,13 @@
-# letter.gg
+# letter-gg
 
-a league of legends app to discuss and look at builds
+## about
 
-## built with
+create builds for champions in team tactics
 
-* React
-* Firebase
+### `npm start`
+
+Runs the app in the development mode.
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+
