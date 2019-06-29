@@ -1,6 +1,7 @@
 language: node_js
 node_js:
   - "10.15.3"
+warnings_are_errors: false
 script:
  - npm install
  - npm run build
