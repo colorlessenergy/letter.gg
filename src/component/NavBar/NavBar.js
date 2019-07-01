@@ -13,6 +13,7 @@ const NavBar = (props) => {
   const links = auth.uid ? (
     <React.Fragment>
       <Link to='/build'>Build</Link>
+      <Link to='/settings'>settings</Link>
       <p onClick={props.logOut}>Log Out</p>
     </React.Fragment>
   ) : (
