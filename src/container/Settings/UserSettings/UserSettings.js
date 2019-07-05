@@ -1,56 +1,47 @@
 import React, { Component } from 'react';
 
+import { connect } from 'react-redux';
+import { Redirect, Link } from 'react-router-dom';
+
+import { resetStateForUpdateUserAction } from '../../../store/actions/authActions';
+
+
 class UserSettings extends Component {
-  state = {
-    username: '',
-    email: '',
-    password: ''
-  }
 
-  onChange = (ev) => {
-    this.setState({
-      [ev.target.id]: ev.target.value
-    })
-  }
-
-  onSubmit = (ev) => {
-    ev.preventDefault();
-
-    console.log(this.state);
+  componentWillMount() {
+    // reset the state of weather the user is updated
+    // when it reaches this page so the user can update their
+    // information again
+    this.props.resetStateForUpdateUser();
   }
 
   render () {
+    if (!this.props.auth.uid) {
+      return <Redirect to='/login' />
+    }
     return (
-      <form onSubmit={this.onSubmit}>
-        <div>
-          <label htmlFor="email">Email: </label>
-          <input type="email" 
-            id="email" 
-            onChange={this.onChange} 
-            value={this.state.email} />
-        </div>
-        <div>
-          <label htmlFor="username">Username: </label>
-          <input type="text"
-            id="username"
-            onChange={this.onChange}
-            value={this.state.username} />
-        </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <input type="password"
-            id="password"
-            onChange={this.onChange}
-            value={this.state.password} />
-        </div>
-        <div>
-          <button>
-            update
-          </button>
-        </div>
-      </form>
+      <div>
+        <Link to='/updateemail'>update email</Link>
+        <Link to='/updatepassword'>update password</Link>
+        <Link to='/updateusername'>update username</Link>
+      </div>
     )
   }
 }
 
-export default UserSettings;
+const mapStateToProps = (state) => {
+  return {
+    ...state,
+    auth: state.firebase.auth
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetStateForUpdateUser: () => {
+      dispatch(resetStateForUpdateUserAction());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettings);

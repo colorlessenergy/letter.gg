@@ -20,6 +20,9 @@ const store = createStore(rootReducer,
   applyMiddleware(thunk.withExtraArgument({getFirebase,getFirestore})
   ),
   reduxFirestore(fbConfig),
+  // insufficient permission error when user signs out
+  // don't worry about it.
+  // https://github.com/prescottprue/react-redux-firebase/issues/494 
   reactReduxFirebase(fbConfig, { useFirestoreForProfile: true, userProfile: 'users', attachAuthIsReady: true })
 ));
 

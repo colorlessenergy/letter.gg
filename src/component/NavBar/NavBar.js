@@ -9,7 +9,7 @@ const NavBar = (props) => {
 
   // when a user signs in with firebase auth it provides a property 'uid'
   // if the user is signed in show them build and logout links
-  // if they are not logged in showthe register and login links
+  // if they are not logged in show the register and login links
   const links = auth.uid ? (
     <React.Fragment>
       <Link to='/build'>Build</Link>

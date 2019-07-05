@@ -1,5 +1,7 @@
 const initState = {
-  authError: null
+  authError: null,
+  userUpdate: false,
+  reauthenticateSuccess: false
 };
 
 const authReducer = (state=initState, action) => {
@@ -32,6 +34,56 @@ const authReducer = (state=initState, action) => {
       return {
         ...state,
         authError: action.err.message
+      }
+
+
+    case 'UPDATE_USER_ERROR':
+      console.log('update user error', action.err, action.err.code === 'auth/user-token-expired');
+
+      return {
+        ...state,
+        authError: action.err.message,
+        userUpdated: false
+      }
+    
+    case 'UPDATE_USER_SUCCESS':
+      console.log('update user success');
+      return {
+        ...state,
+        // this will be used to redirect the user
+        userUpdated: true,
+        reauthenticateSuccess: false
+      }
+
+    case 'REAUTHENTICATE_SUCCESS':
+      console.log('reauthenticate success');
+
+      return {
+        ...state,
+        reauthenticateSuccess: true,
+        authError: null
+      }
+
+    case 'REAUTHENTICATE_ERROR':
+      console.log('reauthenticate ERROR', action.err);
+
+      return {
+        ...state,
+        reauthenticateSuccess: false,
+        authError: action.err.message
+      }
+
+    
+    // reset the state of the user so 
+    // when they try to change some other senstive data
+    // it will make them reauthenticate
+    case 'RESET_STATE_UPDATED_USER':
+      console.log('RESETING state');
+      return {
+        ...state,
+        reauthenticateSuccess: false,
+        authError: null,
+        userUpdated: false
       }
 
     default:

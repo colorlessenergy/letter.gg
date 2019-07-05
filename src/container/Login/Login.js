@@ -26,8 +26,9 @@ class Login extends Component {
   render () {
     const  { authError, auth } = this.props;
 
-    if (auth.uid) return <Redirect to='/' />
-
+    if (auth.uid) {
+      return <Redirect to='/' />
+    }
     return (
       <form onSubmit={this.handleSubmit}>
         <div>
@@ -61,7 +62,6 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     authError: state.auth.authError,
     auth: state.firebase.auth
