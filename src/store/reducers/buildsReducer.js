@@ -11,11 +11,24 @@ const buildReducer = (state=initState, action) => {
     case 'CREATE_BUILD_ERROR':
       console.log('there was an error', action.err)
       return state;
+  
+    case 'EDIT_BUILD_SUCCESS':
+      console.log('successfully edited the build');
+      return {
+        ...state,
+        authError: null
+      }
+    
+    case 'EDIT_BUILD_ERROR':
+      console.log('error editing the build', action.err);
+      return {
+        ...state,
+        authError: null
+      }
 
     default:
       return state
   }
-
 }
 
 export default buildReducer;
