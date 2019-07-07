@@ -2,7 +2,21 @@ import React, { Component } from 'react';
 
 class ContentFormBuild extends Component {
   state = {
+    dataFilled: false,
     content: 'write about why this is the best way to use this champion in team fight tactics'
+  }
+
+  // pass down the props of the parent component
+  // while editing a build to prefill the content 
+  // so it shows on the UI
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.content && !state.dataFilled) {
+      return {
+        content: props.content,
+        dataFilled: true
+      };
+    }
   }
 
   handleChange = (ev) => {

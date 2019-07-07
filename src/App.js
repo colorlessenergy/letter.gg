@@ -9,6 +9,7 @@ import Build from './container/Build/Build';
 import Settings from './component/Settings/Settings.js';
 import Reauthenticate from './container/Settings/UserSettings/Reauthenticate';
 import BuildSettings from './container/Settings/BuildSettings/BuildSettings';
+import EditBuild from './container/Settings/BuildSettings/EditBuild/EditBuild';
 import UserSettings from './container/Settings/UserSettings/UserSettings';
 
 import UserSettingsUpdateEmail from './container/Settings/UserSettings/UserSettingsForms/UpdateUserEmail';
@@ -29,10 +30,12 @@ function App() {
       <Route path='/login' exact component={Login} />
       <Route path='/build/:id' exact component={DisplayBuild} />
       <Route path='/build' exact component={Build} />
-      <Route path='/editbuild' exact component={BuildSettings} />
-      <Route path='/settings' exact component={Settings} />
       <Route path='/reauthenticate' exact component={Reauthenticate} />
 
+
+      <Route path='/settings' exact component={Settings} />
+      <Route path='/editbuild' exact component={BuildSettings} />
+      <Route path='/editbuild/:id' exact component={EditBuild} />
 
       <Route path='/usersettings' exact component={UserSettings} />
       <Route path='/updateemail' exact component={UserSettingsUpdateEmail} />
