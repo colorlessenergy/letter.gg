@@ -1,0 +1,25 @@
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100px;
+  padding: 0 20px;
+}
+
+.nav__link {
+  color: #140F12;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.25em;
+}
+
+.nav__link:hover {
+  text-decoration: underline;
+}
+
+@media only screen and (min-width: 499px) {
+  .nav {
+    width: 80%;
+    margin: 0 auto;
+  }
+}
