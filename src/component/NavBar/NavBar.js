@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logOut } from '../../store/actions/authActions';
+import classes from './NavBar.module.css';
 
 const NavBar = (props) => {
   const { auth } = props;
@@ -12,24 +13,21 @@ const NavBar = (props) => {
   // if they are not logged in show the register and login links
   const links = auth.uid ? (
     <React.Fragment>
-      <Link to='/build'>Build</Link>
-      <Link to='/settings'>settings</Link>
-      <p onClick={props.logOut}>Log Out</p>
+      <Link to='/build' className={classes['nav__link']}>Build</Link>
+      <Link to='/' className={classes['nav__link']}>Letter.gg</Link>
+      <Link to='/settings' className={classes['nav__link']}>settings</Link>
     </React.Fragment>
   ) : (
     <React.Fragment>
-      <Link to='/register'>Register</Link>
-      <Link to='/login'>Login</Link>
+      <Link to='/register' className={classes['nav__link']}>Register</Link>
+      <Link to='/' className={classes['nav__link']}>Letter.gg</Link>
+      <Link to='/login' className={classes['nav__link']}>Login</Link>
     </React.Fragment>
   );
 
   return (
-    <div className="App">
-      <Link to='/'>
-        Letter.gg
-      </Link>
+    <div className={classes['nav']}>
       { links }
-      
     </div>
   )
 }
