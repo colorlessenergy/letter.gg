@@ -17,8 +17,8 @@ import classes from './BuildList.module.css';
     @param {String} builds.id - id: "JWCVdEumOynKelhkxBh4"
     @param {Array} builds.items - items: (3) ["guinsoosrageblade", "spearofshojin", "spearofshojin"]
     @param {String} builds.title - title: "graves"
-  @param {String} url - a sring to prepend to each build link
-  @param {String} class - a sring to append to each list
+  @param {String} url - a string to prepend to each build link
+  @param {String} class - a string to append to each list
  */
 
 const BuildList = (props) => {
