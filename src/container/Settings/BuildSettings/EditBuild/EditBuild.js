@@ -55,15 +55,31 @@ class EditBuild extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
 
-    // pass the id of the build so
-    // firestore can fetch 
-    // the correct build
-    let updatedBuild = {
-      ...this.state,
-      id: this.props.match.params.id
-    }
+    if (this.state.title !== '' &&
+        this.state.champion !== '' &&
+        this.state.content !== '' &&
+        this.state.items.length &&
+        this.state.comp.length) {
 
-    this.props.editBuild(updatedBuild, this.props.history);
+      this.setState({
+        currentDataNeededFilled: ''
+      });
+
+      // pass the id of the build so
+      // firestore can fetch 
+      // the correct build
+      let updatedBuild = {
+        ...this.state,
+        id: this.props.match.params.id
+      }
+
+      this.props.editBuild(updatedBuild, this.props.history);
+
+    } else {
+      this.setState({
+        currentDataNeededFilled: 'information is missing!'
+      });
+    }
 
   }
 
@@ -76,24 +92,26 @@ class EditBuild extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <h2>pick a title</h2>
-        <TitleFormBuild title={ build ? build.title : '' } handleChange={this.handleChange} />
+        <TitleFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false} title={ build ? build.title : '' } handleChange={this.handleChange} />
         
         <h2>pick your champion</h2>
-        <ChampionFormBuild champion={build ? build.champion : ''} handleChange={this.handleChange} />
+        <ChampionFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false} champion={build ? build.champion : ''} handleChange={this.handleChange} />
         
         <h2>pick the best items for this champion</h2>
-        <ItemFormBuild items={ build ? build.items : []  } handleChange={this.handleChange} />
+        <ItemFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false} items={ build ? build.items : []  } handleChange={this.handleChange} />
         
         <h2>pick champions that work best with this champion</h2>
-        <CompFormBuild comp={build ? build.comp : []} handleChange={this.handleChange} />
+        <CompFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false} comp={build ? build.comp : []} handleChange={this.handleChange} />
         
         <h2>write about why this is the best way to use this champion in team fight tactics</h2>
-        <ContentFormBuild content={build ? build.content : ''} handleChange={this.handleChange} />
+        <ContentFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false} content={build ? build.content : ''} handleChange={this.handleChange} />
         <div>
           <button>
             update
           </button>
           { authError ? <p>{ authError }</p>: null }
+
+          { this.state.currentDataNeededFilled ? <p>{ this.state.currentDataNeededFilled }</p> : null }
         </div>
       </form>
     );

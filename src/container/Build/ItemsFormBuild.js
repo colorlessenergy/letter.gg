@@ -5,6 +5,7 @@ class ItemsFormBuild extends Component {
     pickedItems: [],
     item: '',
     filteredItems: [],
+    currentDataNeededFilled: '',
     dataFilled: false,
     items: [
       {"display":"force of nature","lookUp":"forceofnature"},{"display":"frozen heart","lookUp":"frozenheart"},{"display":"guinsoo's rageblade","lookUp":"guinsoosrageblade"},{"display":"phantom dancer","lookUp":"phantomdancer"},{"display":"rapid firecannon","lookUp":"rapidfirecannon"},{"display":"spear of shojin","lookUp":"spearofshojin"},{"display":"blade of the ruined king","lookUp":"bladeoftheruinedking"},{"display":"bloodthirster","lookUp":"bloodthirster"},{"display":"frozen mallet","lookUp":"frozenmallet"},{"display":"luden's echo","lookUp":"ludensecho"},{"display":"morellonomicon","lookUp":"morellonomicon"},{"display":"seraph's embrace","lookUp":"seraphsembrace"},{"display":"thornmail","lookUp":"thornmail"},{"display":"youmuu's ghostblade","lookUp":"youmuusghostblade"},{"display":"yuumi","lookUp":"yuumi"},{"display":"zeke's herald","lookUp":"zekesherald"},{"display":"zephyr","lookUp":"zephyr"},{"display":"cursed blade","lookUp":"cursedblade"},{"display":"dragon's claw","lookUp":"dragonsclaw"},{"display":"hextech gunblade","lookUp":"hextechgunblade"},{"display":"infinity edge","lookUp":"infinityedge"},{"display":"locket of the iron solari","lookUp":"locketoftheironsolari"},{"display":"rabadon's deathcap","lookUp":"rabadonsdeathcap"},{"display":"red buff","lookUp":"redbuff"},{"display":"runaan's hurricane","lookUp":"runaanshurricane"},{"display":"statikk shiv","lookUp":"statikkshiv"},{"display":"sword of the divine","lookUp":"swordofthedivine"},{"display":"titanic hydra","lookUp":"titanichydra"},{"display":"warmog's armor","lookUp":"warmogsarmor"},{"display":"hush","lookUp":"hush"},{"display":"ionic spark","lookUp":"ionicspark"},{"display":"knight's vow","lookUp":"knightsvow"},{"display":"sword breaker","lookUp":"swordbreaker"},{"display":"darkin","lookUp":"darkin"},{"display":"guardian angel","lookUp":"guardianangel"},{"display":"redemption","lookUp":"redemption"}]
@@ -49,26 +50,49 @@ class ItemsFormBuild extends Component {
   }
 
   handleItemClick = (ev) => {
-    let arr = [...this.state.pickedItems, ev.target.id];
-    this.setState({
-      pickedItems: arr
-    }, () => {
+    const maxAmountOfBuilds = 3;
+
+    if (this.state.pickedItems.length < maxAmountOfBuilds) {
+      let arr = [...this.state.pickedItems, ev.target.id];
+      let formValidationString = '';
+
+      if (arr.length < maxAmountOfBuilds) {
+        formValidationString = (maxAmountOfBuilds - arr.length) + ' items are needed';
+      } else if (arr.length === maxAmountOfBuilds) {
+        formValidationString = ''
+      }
+
+      this.setState({
+        pickedItems: arr,
+        // dynamically tell the user how many items is needed
+        currentDataNeededFilled: formValidationString
+      }, () => {
         this.props.handleChange({
           items: this.state.pickedItems
         });
-    });
+      });
+    }
   }
 
   handleRemoveItem = (ev) => {
     let arr = this.state.pickedItems.filter((item, index) => {
-      console.log(index, ev.target.id)
       return index !== Number(ev.target.id);
     });
+    let maxAmountOfBuilds = 3;
 
-    console.log(arr);
+    let formValidationString = '';
+
+    if (arr.length < maxAmountOfBuilds) {
+      formValidationString = (maxAmountOfBuilds - arr.length) + ' items are needed'
+    } else if (arr.length === maxAmountOfBuilds) {
+      formValidationString = ''
+    }
   
     this.setState({
-      pickedItems: arr
+      pickedItems: arr,
+
+      // dynamically tell the user how many items is needed
+      currentDataNeededFilled: formValidationString
     }, () => {
       this.props.handleChange({
         items: this.state.pickedItems
@@ -122,6 +146,20 @@ class ItemsFormBuild extends Component {
             onChange={this.handleChange}
             value={this.state.item}>
           </input>
+          {/* form validation for the user */}
+
+          {
+            this.state.currentDataNeededFilled ?
+              <p>{this.state.currentDataNeededFilled}</p> :
+              null
+          }
+
+          {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+          {
+            !this.state.currentDataNeededFilled && this.props.missingInfo ?
+              <p>at most 3 items are needed</p> :
+              null
+          }
         </div>
         <div>
           { items }

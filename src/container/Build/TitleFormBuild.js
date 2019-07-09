@@ -3,7 +3,8 @@ import React, {Component} from 'react';
 class TitleFormBuild extends Component {
   state = {
     title: '',
-    dataFilled: false
+    dataFilled: false,
+    currentDataNeededFilled: ''
   }
 
   // pass down the props of the parent component
@@ -22,6 +23,16 @@ class TitleFormBuild extends Component {
   handleChange = (ev) => {
     this.setState({
       [ev.target.id]: ev.target.value
+    }, () => {
+      if (this.state.title === '') {
+        this.setState({
+          currentDataNeededFilled: 'A title is needed'
+        });
+      } else {
+        this.setState({
+          currentDataNeededFilled: ''
+        });
+      }
     });
 
     // passing the state of the champion to the parent
@@ -33,6 +44,9 @@ class TitleFormBuild extends Component {
   }
 
   render() {
+
+    console.log(this.props)
+
     return (
       <div>
         <label
@@ -42,6 +56,18 @@ class TitleFormBuild extends Component {
           id='title'
           onChange={this.handleChange}
           value={this.state.title} />
+        { 
+          this.state.currentDataNeededFilled ? 
+          <p>{ this.state.currentDataNeededFilled }</p> : 
+          null 
+        }
+
+        {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+        {
+          !this.state.currentDataNeededFilled && this.props.missingInfo ?
+            <p>A title is needed</p> :
+            null
+        }
       </div>
     );
   }

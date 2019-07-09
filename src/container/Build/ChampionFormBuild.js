@@ -6,6 +6,7 @@ class ChampionFormBuild extends Component {
     filterChampions: [],
     imageURL: '',
     dataFilled: false,
+    currentDataNeededFilled: '',
     champions: [
       {"display":"fiora","lookUp":"Fiora"},{"display":"graves","lookUp":"Graves"},{"display":"kassadin","lookUp":"Kassadin"},{"display":"kha’zix","lookUp":"Khazix"},{"display":"mordekaiser","lookUp":"Mordekaiser"},{"display":"nidalee","lookUp":"Nidalee"},{"display":"tristana","lookUp":"Tristana"},{"display":"vayne","lookUp":"Vayne"},{"display":"warwick","lookUp":"Warwick"},{"display":"ahri","lookUp":"Ahri"},{"display":"blitzcrank","lookUp":"Blitzcrank"},{"display":"braum","lookUp":"Braum"},{"display":"darius ","lookUp":"Darius"},{"display":"elise","lookUp":"Elise"},{"display":"lissandra","lookUp":"Lissandra"},{"display":"lucian","lookUp":"Lucian"},{"display":"lulu","lookUp":"Lulu"},{"display":"pyke","lookUp":"Pyke"},{"display":"rek’sai","lookUp":"RekSai"},{"display":"shen","lookUp":"Shen"},{"display":"varus","lookUp":"Varus"},{"display":"zed","lookUp":"Zed"},{"display":"aatrox","lookUp":"Aatrox"},{"display":"ashe","lookUp":"Ashe"},{"display":"cho’gath","lookUp":"Chogath"},{"display":"evelynn","lookUp":"Evelynn"},{"display":"gangplank","lookUp":"Gangplank"},{"display":"katarina","lookUp":"Katarina"},{"display":"kennen","lookUp":"Kennen"},{"display":"morgana","lookUp":"Morgana"},{"display":"poppy","lookUp":"Poppy"},{"display":"rengar","lookUp":"Rengar"},{"display":"shyvana","lookUp":"Shyvana"},{"display":"veigar","lookUp":"Veigar"},{"display":"volibear","lookUp":"Volibear"},{"display":"akali ","lookUp":"Akali"},{"display":"aurelion sol","lookUp":"AurelionSol"},{"display":"brand","lookUp":"Brand"},{"display":"draven","lookUp":"Draven"},{"display":"gnar","lookUp":"Gnar"},{"display":"kindred","lookUp":"Kindred"},{"display":"leona","lookUp":"Leona"},{"display":"sejuani","lookUp":"Sejuani"},{"display":"anivia ","lookUp":"Anivia"},{"display":"karthus","lookUp":"Karthus"},{"display":"kayle","lookUp":"Kayle"},{"display":"miss fortune","lookUp":"MissFortune"},{"display":"swain","lookUp":"Swain"},{"display":"yasuo","lookUp":"Yasuo"}]
   }
@@ -47,12 +48,14 @@ class ChampionFormBuild extends Component {
       return champion.display.includes(ev.target.value.toLowerCase());
     });
 
-    console.log(ev.target.value);
-
     this.setState({
       filterChampions: filterdChamps,
       champion: ev.target.value,
-      imageURL: ''
+      imageURL: '',
+
+      // if the input is changing that means a champion isn't picked
+      // display this to the user
+      currentDataNeededFilled: 'a champion is needed!'
     });
 
     // passing the state of the champion to the parent
@@ -69,9 +72,9 @@ class ChampionFormBuild extends Component {
     this.setState({
       champion: ev.target.id,
       filterChampions: [],
-      imageURL: championIcon
+      imageURL: championIcon,
+      currentDataNeededFilled: ''
     });
-
     // pass the state of the champion to the parent
     this.props.handleChange({
       champion: ev.target.id,
@@ -110,6 +113,22 @@ class ChampionFormBuild extends Component {
             onChange={this.handleChange}
             value={this.state.champion} />
         </div>
+
+        {/* form validation for the user */}
+        
+        {
+          this.state.currentDataNeededFilled ? 
+          <p>{this.state.currentDataNeededFilled }</p> : 
+          null 
+        }
+
+        {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+
+        {
+          !this.state.currentDataNeededFilled && this.props.missingInfo ?
+            <p>a champion is needed!</p> :
+            null
+        }
         {filterChampions}
       </React.Fragment>
     )
