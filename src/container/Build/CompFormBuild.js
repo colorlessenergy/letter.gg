@@ -6,6 +6,7 @@ class CompFormBuild extends Component {
     champion: '',
     filteredChampions: [],
     dataFilled: false,
+    currentDataNeededFilled: '',
     champions: [{ "display": "fiora", "lookUp": "Fiora" }, { "display": "graves", "lookUp": "Graves" }, { "display": "kassadin", "lookUp": "Kassadin" }, { "display": "kha’zix", "lookUp": "Khazix" }, { "display": "mordekaiser", "lookUp": "Mordekaiser" }, { "display": "nidalee", "lookUp": "Nidalee" }, { "display": "tristana", "lookUp": "Tristana" }, { "display": "vayne", "lookUp": "Vayne" }, { "display": "warwick", "lookUp": "Warwick" }, { "display": "ahri", "lookUp": "Ahri" }, { "display": "blitzcrank", "lookUp": "Blitzcrank" }, { "display": "braum", "lookUp": "Braum" }, { "display": "darius ", "lookUp": "Darius" }, { "display": "elise", "lookUp": "Elise" }, { "display": "lissandra", "lookUp": "Lissandra" }, { "display": "lucian", "lookUp": "Lucian" }, { "display": "lulu", "lookUp": "Lulu" }, { "display": "pyke", "lookUp": "Pyke" }, { "display": "rek’sai", "lookUp": "RekSai" }, { "display": "shen", "lookUp": "Shen" }, { "display": "varus", "lookUp": "Varus" }, { "display": "zed", "lookUp": "Zed" }, { "display": "aatrox", "lookUp": "Aatrox" }, { "display": "ashe", "lookUp": "Ashe" }, { "display": "cho’gath", "lookUp": "Chogath" }, { "display": "evelynn", "lookUp": "Evelynn" }, { "display": "gangplank", "lookUp": "Gangplank" }, { "display": "katarina", "lookUp": "Katarina" }, { "display": "kennen", "lookUp": "Kennen" }, { "display": "morgana", "lookUp": "Morgana" }, { "display": "poppy", "lookUp": "Poppy" }, { "display": "rengar", "lookUp": "Rengar" }, { "display": "shyvana", "lookUp": "Shyvana" }, { "display": "veigar", "lookUp": "Veigar" }, { "display": "volibear", "lookUp": "Volibear" }, { "display": "akali ", "lookUp": "Akali" }, { "display": "aurelion sol", "lookUp": "AurelionSol" }, { "display": "brand", "lookUp": "Brand" }, { "display": "draven", "lookUp": "Draven" }, { "display": "gnar", "lookUp": "Gnar" }, { "display": "kindred", "lookUp": "Kindred" }, { "display": "leona", "lookUp": "Leona" }, { "display": "sejuani", "lookUp": "Sejuani" }, { "display": "anivia ", "lookUp": "Anivia" }, { "display": "karthus", "lookUp": "Karthus" }, { "display": "kayle", "lookUp": "Kayle" }, { "display": "miss fortune", "lookUp": "MissFortune" }, { "display": "swain", "lookUp": "Swain" }, { "display": "yasuo", "lookUp": "Yasuo" }]
   }
 
@@ -54,8 +55,15 @@ class CompFormBuild extends Component {
 
   handleItemClick = (ev) => {
     let arr = [...this.state.pickedChampions, ev.target.id];
+    let formValidationString = '';
+
+    if (arr.length) {
+      formValidationString = '';
+    }
+    
     this.setState({
-      pickedChampions: arr
+      pickedChampions: arr,
+      currentDataNeededFilled: formValidationString
     }, () => {
       this.props.handleChange({
         comp: this.state.pickedChampions
@@ -65,13 +73,19 @@ class CompFormBuild extends Component {
 
   handleRemoveItem = (ev) => {
     let arr = this.state.pickedChampions.filter((champ, index) => {
-      console.log(index, ev.target.id)
       return index !== Number(ev.target.id);
     });
 
+    let formValidationString = '';
+
+
+    if (arr.length === 0) {
+      formValidationString = 'a single champion is needed!';
+    }
 
     this.setState({
-      pickedChampions: arr
+      pickedChampions: arr,
+      currentDataNeededFilled: formValidationString
     }, () => {
       this.props.handleChange({
         comp: this.state.pickedChampions
@@ -126,6 +140,21 @@ class CompFormBuild extends Component {
             onChange={this.handleChange}
             value={this.state.champion}>
           </input>
+
+          {/* form validation for the user */}
+
+          {
+            this.state.currentDataNeededFilled ?
+              <p>{this.state.currentDataNeededFilled}</p> :
+              null
+          }
+
+          {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+          {
+            !this.state.currentDataNeededFilled && this.props.missingInfo ?
+              <p>a single champion is needed!</p> :
+              null
+          }
         </div>
         <div>
           {displayedChampions}

@@ -34,9 +34,24 @@ class Build extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
 
-    this.props.createBuild(this.state);
+    if (this.state.title !== '' &&
+      this.state.champion !== '' &&
+      this.state.content !== '' &&
+      this.state.items.length &&
+      this.state.comp.length) {
 
-    this.props.history.push('/');
+      this.setState({
+        currentDataNeededFilled: ''
+      });
+
+        this.props.createBuild(this.state);
+        this.props.history.push('/');
+      } else {
+        this.setState({
+          currentDataNeededFilled: 'information is missing!'
+        });
+      }
+
   }
 
   render () {
@@ -44,22 +59,25 @@ class Build extends Component {
 
     if (!auth.uid) return <Redirect to='/login' />
 
+
     return (
       <form onSubmit={this.handleSubmit}>
         <h2>pick a title</h2>
-        <TitleFormBuild handleChange={this.handleChange} />
+        <TitleFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false } handleChange={this.handleChange} />
         <h2>pick your champion</h2>
-        <ChampionFormBuild handleChange={this.handleChange} />
+        <ChampionFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false } handleChange={this.handleChange} />
         <h2>pick the best items for this champion</h2>
-        <ItemFormBuild handleChange={this.handleChange} />
+        <ItemFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false } handleChange={this.handleChange} />
         <h2>pick champions that work best with this champion</h2>
-        <CompFormBuild handleChange={this.handleChange} />
+        <CompFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false } handleChange={this.handleChange} />
         <h2>write about why this is the best way to use this champion in team fight tactics</h2>
-        <ContentFormBuild handleChange={this.handleChange} />
+        <ContentFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false } handleChange={this.handleChange} />
         <div>
           <button>
             create
           </button>
+
+          {this.state.currentDataNeededFilled ? <p>{this.state.currentDataNeededFilled}</p> : null}
         </div>
       </form>
     );
@@ -73,7 +91,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  console.log('dispatching action to create a build in BUILD.JS')
   return {
     createBuild: (build) => {
       return dispatch(createBuildAction(build))
