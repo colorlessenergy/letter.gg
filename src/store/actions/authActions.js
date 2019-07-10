@@ -105,7 +105,6 @@ export const updateUserPasswordAction = (updateUser) => {
 
 export const updateUserUsernameAction = (updateUser) => {
   return (dispatch, getState, { getFirestore }) => {
-    console.log(updateUser)
     const firestore = getFirestore();
     const profileUser = getState().firebase.profile;
 
@@ -135,12 +134,10 @@ export const updateUserUsernameAction = (updateUser) => {
               a: 'a'
             })
             .then(() => {
-              console.log('new user created')
               dispatch({ type: 'UPDATE_USER_SUCCESS' });
             })
           })
           .catch((err) => {
-            console.log('update username ', err)
             dispatch({ type: 'UPDATE_USER_ERROR', err })
           });
       })
