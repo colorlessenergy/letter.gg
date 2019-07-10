@@ -87,22 +87,64 @@ export const updateUserPasswordAction = (updateUser) => {
   }
 };
 
+/**
+ * update user username
+ * to create uniquness a collection for usernames was created
+ * this collection is used to check if the username exists
+ * by querying for the doc by username
+ * using this information it will error to the user if the
+ * username exist 
+ * 
+ * if it doesn't already exist it will delete the original username and create
+ * a new doc with the new username set as the doc id
+ * 
+ * @param {Object} updateUser - a object with meta data about the updateed user
+ * @param {String} updateUser.username - the new username
+ * @param {String} updatedUser.UID - the uid of the document to update user
+ */
+
 export const updateUserUsernameAction = (updateUser) => {
   return (dispatch, getState, { getFirestore }) => {
+    console.log(updateUser)
     const firestore = getFirestore();
+    const profileUser = getState().firebase.profile;
 
-    // only update username if it exist
-    let userCollection = firestore.collection('users').doc(updateUser.UID);
+
     if (updateUser.username) {
-      userCollection.update({
-        username: updateUser.username
-      })
-      .then(() => {
-        console.log('update username');
-        dispatch({ type: 'UPDATE_USER_SUCCESS' });
+      let usernameCollection = firestore.collection('usernames');
+      // check if the username exists in the collection
+      // if it does throw an error and tell them to use a different username
+      usernameCollection.doc(updateUser.username)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return dispatch({ type: 'UPDATE_USER_ERROR', err: { message: 'username already exist choose something else' } })
+        }
+
+        let userCollection = firestore.collection('users').doc(updateUser.UID);
+        return userCollection.update({
+          username: updateUser.username
+        })
+        .then(() => {
+          return usernameCollection.doc(profileUser.username)
+            .delete();
+          })
+          .then(() => {
+            return usernameCollection.doc(updateUser.username)
+            .set({
+              a: 'a'
+            })
+            .then(() => {
+              console.log('new user created')
+              dispatch({ type: 'UPDATE_USER_SUCCESS' });
+            })
+          })
+          .catch((err) => {
+            console.log('update username ', err)
+            dispatch({ type: 'UPDATE_USER_ERROR', err })
+          });
       })
       .catch((err) => {
-        console.log('update username ', err)
         dispatch({ type: 'UPDATE_USER_ERROR', err })
       });
     }
@@ -124,25 +166,49 @@ export const registerAction = (newUser) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();
     const firestore = getFirestore();
-
-    // when creating a document in firebase auth
-    // create a document in firestore for users
-    //  so we can store more data about the user
-    // the id is the same for both
-    firebase.auth().createUserWithEmailAndPassword(
-      newUser.email,
-      newUser.password
-    ).then((res) => {
-      return firestore.collection('users').doc(res.user.uid).set({
-        username: newUser.username
+    
+    
+    firestore.collection('usernames')
+    .doc(newUser.username)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return dispatch({ type: 'REGISTER_ERROR', err: { message: 'username exists'} });
+      }
+      // when creating a document in firebase auth
+      // create a document in firestore for users
+      //  so we can store more data about the user
+      // the id is the same for both
+      return firebase.auth().createUserWithEmailAndPassword(
+        newUser.email,
+        newUser.password
+      )
+      .then((res) => {
+        console.log('reached', res)
+        return firestore.collection('users').doc(res.user.uid).set({
+          username: newUser.username
+        })
       })
-    })
-    .then(() => {
-      dispatch({ type: 'REGISTER_SUCCESS' });
+      .then(() => {
+        // only need to create the user so i can i use it to check
+        // if the username exists to make it seem like they are unique
+        
+        return firestore.collection('usernames').doc(newUser.username)
+          .set({
+            a: 'a'
+          });
+      })
+      .then(() => {
+        dispatch({ type: 'REGISTER_SUCCESS' });
+      })
+      .catch((err) => {
+        dispatch({ type: 'REGISTER_ERROR', err });
+      })
     })
     .catch((err) => {
       dispatch({ type: 'REGISTER_ERROR', err });
     })
+      
 
     console.log(newUser, 'Register Action');
   }

@@ -30,7 +30,7 @@ const authReducer = (state=initState, action) => {
       }
 
     case 'REGISTER_ERROR':
-      console.log('register error')
+      console.log('register error', action)
       return {
         ...state,
         authError: action.err.message
