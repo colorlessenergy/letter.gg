@@ -6,14 +6,14 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 
 import BuildList from '../../component/BuildList/BuildList';
-import SortOptions from './SortOptions';
+import SortOptions from './SortOptions'
 
 /**
  * display all the builds
  */
 class Home extends Component {
 
-  render () {
+  render() {
     return (
       <React.Fragment>
         <SortOptions />
@@ -34,6 +34,6 @@ export default compose(
   // when firestore changes or component load sync the state
   //  of firestore with this component state
   firestoreConnect([
-    { collection: 'builds', orderBy: ['upvotes', 'desc'] }
+    { collection: 'builds', orderBy: ['createdAt', 'desc'] }
   ])
 )(Home);

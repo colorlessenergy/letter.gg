@@ -1,0 +1,17 @@
+.sort {
+  align-items: center;
+  display: flex;
+  margin: 0 auto 25px auto;
+  width: 80%;
+}
+
+.sort__categories, 
+.sort__category {
+  display: inline-block;
+  margin: 0 20px 0 0;
+  color: #000;
+}
+
+.active {
+  color: #FE7BB4;
+}

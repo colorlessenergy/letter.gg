@@ -26,6 +26,21 @@ const buildReducer = (state=initState, action) => {
         authError: null
       }
 
+    case 'UPVOTE_BUILD_SUCCESS':
+      console.log('upvote build success');
+      return {
+        ...state,
+        authError: null
+      }
+    
+    case 'UPVOTE_BUILD_ERROR':
+      console.log('upvote error', action.err);
+      return {
+        ...state,
+        authError: action.err
+      }
+
+
     default:
       return state
   }
