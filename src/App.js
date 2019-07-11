@@ -19,6 +19,7 @@ import UserSettingsUpdateUsername from './container/Settings/UserSettings/UserSe
 
 import DisplayBuild from './container/DisplayBuild/DisplayBuild';
 import Home from './container/Home/Home';
+import HomeNew from './container/Home/HomeNew';
 import NavBar from './component/NavBar/NavBar';
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
     <BrowserRouter>
       <NavBar />
       <Route path='/' exact component={Home} />
+      <Route path='/new' exact component={HomeNew} />
+
       <Route path='/register' exact component={Register} />
       <Route path='/login' exact component={Login} />
       <Route path='/build/:id' exact component={DisplayBuild} />

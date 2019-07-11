@@ -60,7 +60,7 @@ const BuildList = (props) => {
                   <img src={championIcon} alt={build.champion} />
                 </div>
                 <div className={classes['build__flex--vertical']}>
-                    <h2 className={classes['build__title']}>[{build.champion}]<span className={classes['font--normal']}> - {date} - {newTitle}</span></h2>
+                    <h2 className={classes['build__title']}>[{build.champion}]<span className={classes['font--normal']}> - {date} - {build.upvotes} likes - {newTitle}</span></h2>
                   <div className={classes['build__items']}>
                     {build.items.map((item) => {
                       let itemIcon = require(`../../assets/item-icons/${item}.png`);

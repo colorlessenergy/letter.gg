@@ -9,7 +9,9 @@ export const createBuildAction = (build) => {
       ...build,
       creator: profile.username,
       authorId: authorId,
-      createdAt: new Date()
+      createdAt: new Date(),
+      usersLikedBuild: [],
+      upvotes: 0
     })
     .then(() => {
       dispatch({ type: 'CREATE_BUILD', build: build });
@@ -57,4 +59,53 @@ export const editBuildAction = (updatedBuild, history) => {
       })
 
   };
+}
+
+export const upvoteBuildAction = (likedMetadata) => {
+  return (dispatch, getState, { getFirestore }) => {
+    console.log('upvoted successfully', likedMetadata);
+    const firestore = getFirestore();
+
+    if (likedMetadata.buildId && likedMetadata.userId) {
+      firestore
+        .collection('builds')
+        .doc(likedMetadata.buildId)
+        .update({
+          usersLikedBuild: firestore.FieldValue.arrayUnion(likedMetadata.userId),
+          upvotes: firestore.FieldValue.increment(1)
+        })
+        .then(() => {
+          dispatch({ type: 'UPVOTE_BUILD_SUCCESS' });
+        })
+        .catch((err) => {
+          dispatch({ type: 'UPVOTE_BUILD_ERROR', err });
+          console.log('err', err);
+        })
+    }
+  }
+}
+
+export const removeUpvoteBuildAction = (likedMetadata) => {
+  return (dispatch, getState, { getFirestore }) => {
+    console.log('removed upvoted successfully', likedMetadata);
+    const firestore = getFirestore();
+
+    if (likedMetadata.buildId && likedMetadata.userId) {
+      firestore
+        .collection('builds')
+        .doc(likedMetadata.buildId)
+        .update({
+          usersLikedBuild: firestore.FieldValue.arrayRemove(likedMetadata.userId),
+          upvotes: firestore.FieldValue.increment(-1)
+        })
+        .then(() => {
+          dispatch({ type: 'UPVOTE_BUILD_SUCCESS' });
+        })
+        .catch((err) => {
+          dispatch({ type: 'UPVOTE_BUILD_ERROR', err });
+          console.log('err', err);
+        })
+    }
+
+  }
 }
