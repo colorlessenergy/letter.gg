@@ -21,8 +21,8 @@ class Home extends Component {
    * if the input to filter champions is empty 
    * display all the builds
    * 
-   * @param {*} props - props which contains all the builds
-   * @param {*} state = state which contains the value of the input
+   * @param {Object} props - props which contains all the builds
+   * @param {Object} state = state which contains the value of the input
    */
 
   static getDerivedStateFromProps(props, state) {
