@@ -24,6 +24,40 @@ export const createBuildAction = (build) => {
 }
 
 /**
+ * 
+ * stores a comment inside the comments collection
+ * 
+ * @param {Object} comment - data about the comment
+ * @param {String} comment.buildId - the id of the build the comment is made in
+ * @param {String} comment.comment - the comment content the user created
+ */
+
+export const createCommentAction = (comment) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    const profile = getState().firebase.profile;
+    const authorId = getState().firebase.auth.uid;
+
+
+    return firestore.collection('comments')
+    .add({
+      comment: comment.comment,
+      buildId: comment.buildId,
+      creator: profile.username,
+      authorId: authorId,
+      createdAt: new Date()
+    })
+    .then(() => {
+      dispatch({ type: 'CREATE_COMMENT_SUCCESS' });
+    })
+    .catch((err) => {
+      dispatch({ type: 'CREATE_COMMENT_ERROR', err });
+    });
+  }
+}
+
+/**
  * takes in new information about a build and updates it in firestore
  * 
  * @param {Object} updatedBuild - all the data for the build
