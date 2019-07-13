@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux';
 import { Redirect } from'react-router';
+import { Link } from 'react-router-dom';
 
-import { upvoteBuildAction, removeUpvoteBuildAction } from '../../store/actions/buildsAction';
+import { upvoteBuildAction, removeUpvoteBuildAction, createCommentAction } from '../../store/actions/buildsAction';
 
 /**
  * display a single build
@@ -15,7 +16,8 @@ import { upvoteBuildAction, removeUpvoteBuildAction } from '../../store/actions/
 class DisplayBuild extends Component {
 
   state = {
-    userLikedBuild: false
+    userLikedBuild: false,
+    comment: ''
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -34,6 +36,28 @@ class DisplayBuild extends Component {
         }
       }
     }
+  }
+  
+  handleCreateComment = (ev) => {
+    ev.preventDefault();
+
+    let comment = {
+      comment: this.state.comment,
+      buildId: this.props.match.params.id
+    }
+
+    this.setState({
+      comment: ''
+    })
+
+    this.props.createComment(comment);
+  }
+
+  handleCommentChange = (ev) => {
+
+    this.setState({
+      [ev.target.id]: ev.target.value
+    })
   }
 
   handleUpvote = () => {
@@ -67,7 +91,31 @@ class DisplayBuild extends Component {
   }
 
   render () {
-    const { build } = this.props;
+    const { build, comments } = this.props;
+    console.log(this.props)
+    let displayComments;
+
+    if (comments) {
+      displayComments = comments.map((comment) => {
+        return (
+          <div>
+            <p>
+              { comment.creator }
+            </p>
+            <p>
+              { comment.comment }
+            </p>
+          </div>
+        )
+      })
+    } else {
+      displayComments = (
+        <p>
+          no comments 
+        </p>
+      )
+    }
+    
     if (build) {
 
       // image for the main champion the build 
@@ -95,8 +143,36 @@ class DisplayBuild extends Component {
         })}
 
         <p>
-          {build.content}
+          {build.comment}
         </p>
+
+        {/* a form to create a comment */}
+          {this.props.auth.uid ? (
+          <form onSubmit={this.handleCreateComment}>
+            <div>
+              <label htmlFor='comment'></label>
+              <textarea
+                id='comment'
+                value={this.state.comment}
+                cols='100'
+                rows='5'
+                onChange={this.handleCommentChange}
+                placeholder="create a comment!" />
+            </div>
+            <div>
+              <button>
+                comment
+            </button>
+            </div>
+          </form>
+          ) : (
+            <div>
+              want to comment?
+              <Link to='/login'>login</Link>
+              <Link to='/register'>register</Link>
+            </div>
+          ) }
+          { displayComments }
       </section>
     )
   } else {
@@ -113,9 +189,10 @@ class DisplayBuild extends Component {
   const id = ownProps.match.params.id;
   const builds = state.firestore.data.builds;
   const build = builds ? builds[id] : null;
-
+  console.log(state)
   return {
     build: build,
+    comments: state.firestore.ordered.comments,
     auth: state.firebase.auth
   }
 }
@@ -123,22 +200,24 @@ class DisplayBuild extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     upvoteBuild: (likedMetadata) => {
-
-
       dispatch(upvoteBuildAction(likedMetadata));
     },
 
     removeUpvoteBuild: (likedMetadata) => {
-
-
       dispatch(removeUpvoteBuildAction(likedMetadata));
-    } 
+    },
+
+    createComment: (comment) => {
+      console.log('dispatching create comment')
+      dispatch(createCommentAction(comment));
+    }
   }
 }
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
-    { collection: 'builds' }
+    { collection: 'builds' },
+    { collection: 'comments', orderBy: ['createdAt', 'desc'] }
   ]),
 )(DisplayBuild);

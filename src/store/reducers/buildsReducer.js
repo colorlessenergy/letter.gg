@@ -11,7 +11,15 @@ const buildReducer = (state=initState, action) => {
     case 'CREATE_BUILD_ERROR':
       console.log('there was an error', action.err)
       return state;
-  
+
+    case 'CREATE_COMMENT_SUCCESS':
+      console.log('created comment', action)
+      return state;
+
+    case 'CREATE_COMMENT_ERROR':
+      console.log('there was an error', action.err)
+      return state;
+
     case 'EDIT_BUILD_SUCCESS':
       console.log('successfully edited the build');
       return {
