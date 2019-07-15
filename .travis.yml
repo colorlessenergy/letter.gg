@@ -3,6 +3,7 @@ node_js:
   - "10.15.3"
 script:
  - npm install
+ - npm run install-cloud-functions
  - npm run build
 install:
   - npm install -g firebase-tools
