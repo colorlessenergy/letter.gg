@@ -1,0 +1,11 @@
+.reply-form {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.replies {
+  margin-left: 30px;
+}
