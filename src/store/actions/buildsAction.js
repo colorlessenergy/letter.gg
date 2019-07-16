@@ -80,6 +80,7 @@ export const createReplyAction = (reply) => {
       .add({
         replyMessage: reply.replyMessage,
         commentReplyingToId: reply.commentReplyingToId,
+        buildId: reply.buildId,
         creator: profile.username,
         authorId: authorId,
         createdAt: new Date()
@@ -176,6 +177,95 @@ export const removeUpvoteBuildAction = (likedMetadata) => {
           console.log('err', err);
         })
     }
+  }
+}
 
+/**
+ * 
+ * when deleting a build delete all the comments and replies on them
+ * 
+ * queried for the comments and replies that have the id of the build
+ * loop through them then delete every single one
+ * 
+ * 
+ * @param {String} buildId - the id of the build to find the build, comment and reply
+ * @param {Object} history - history to redirect the url back to editbuild
+ */
+
+export const deleteBuildAction = (buildId, history) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+    
+    // delete the build in firestore
+    firestore
+      .collection('builds')
+      .doc(buildId)
+      .delete()
+      // delete all comments for the build
+      .then(() => {
+        return firestore
+        .collection('comments')
+        .where('buildId', '==', buildId)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            firestore
+              .collection('comments')
+              .doc(doc.id)
+              .delete()
+              .catch(err => dispatch({ type: 'DELETE_BUILD_ERROR', err }));
+          })
+        })
+      })
+      .then(() => {
+        //  delete all the replies for a build
+        return firestore
+          .collection('replies')
+          .where('buildId', '==', buildId)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              firestore
+                .collection('replies')
+                .doc(doc.id)
+                .delete()
+                .catch(err => dispatch({ type: 'DELETE_BUILD_ERROR', err }))
+            })
+          })
+      })
+      .then(() => {
+        dispatch({ type: 'DELETE_BUILD_SUCCESS' })
+        return history.push('/editbuild');
+      })
+  }
+}
+
+export const deleteCommentAction = (commentId) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection('comments')
+      .doc(commentId)
+      .delete()
+      .then(() => {
+        dispatch({ type: 'DELETE_COMMENT_SUCCESS' });
+      })
+      .catch(err => dispatch({ type: 'DELETE_COMMENT_ERROR', err }));
+  }
+}
+
+export const deleteReplyAction = (replyId) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection('replies')
+      .doc(replyId)
+      .delete()
+      .then(() => {
+        dispatch({ type: 'DELETE_REPLY_SUCCESS' });
+      })
+      .catch(err => dispatch({ type: 'DELETE_REPLY_ERROR', err }));
   }
 }
