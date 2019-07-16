@@ -6,7 +6,10 @@ import { compose } from 'redux';
 import { Redirect } from'react-router';
 import { Link } from 'react-router-dom';
 
-import { upvoteBuildAction, removeUpvoteBuildAction, createCommentAction } from '../../store/actions/buildsAction';
+import { upvoteBuildAction, removeUpvoteBuildAction, createCommentAction, createReplyAction } from '../../store/actions/buildsAction';
+
+import classes from './DisplayBuild.module.css';
+
 
 /**
  * display a single build
@@ -17,7 +20,9 @@ class DisplayBuild extends Component {
 
   state = {
     userLikedBuild: false,
-    comment: ''
+    comment: '',
+    reply: '',
+    replyingToID: ''
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -53,8 +58,73 @@ class DisplayBuild extends Component {
     this.props.createComment(comment);
   }
 
-  handleCommentChange = (ev) => {
+  /**
+   * when a reply box is submitted 
+   * remove the reply box from the UI 
+   * and create a document in firestore for the replies collection
+   */
 
+  handleCreateReply = (ev) => {
+    ev.preventDefault();
+
+    // hide the form to create a reply
+
+    let form = document.querySelector('#' + this.state.replyingToID);
+    form.classList.toggle(classes.show);
+    this.setState({
+      replyingToID: ''
+    });
+
+    let replyData = {
+      commentReplyingToId: this.state.replyingToID,
+      replyMessage: this.state.reply
+    }
+    // dispatch the action to create a replyv
+    this.props.replyToComment(replyData)
+  }
+  
+  /**
+   * show a reply box when a user clicks on the reply button
+   * on a comment
+   * 
+   */
+
+  handleShowReplyForm = (ev) => {
+    
+    let commentId = ev.target.getAttribute('data-commentid');
+
+    // if the user clicks on reply button and it has already been pressed   
+    // close it.
+    if (this.state.replyingToID === commentId) {
+      let form = document.querySelector('#' + this.state.replyingToID);
+      form.classList.toggle(classes.show);
+
+      return this.setState({
+        replyingToID: ''
+      });
+    }
+
+    // close previous reply box if a person click on to reply to a new comment
+    if (this.state.replyingToID !== commentId && this.state.replyingToID) {
+      let form = document.querySelector('#' + this.state.replyingToID);
+      form.classList.toggle(classes.show);
+
+      this.setState({
+        reply: '',
+        replyingToID: ''
+      })
+    }
+    
+    // show the reply box
+    let form = document.querySelector('#' + commentId);
+    form.classList.toggle(classes.show);
+    this.setState({
+      replyingToID: commentId
+    });
+
+  }
+
+  handleChange = (ev) => {
     this.setState({
       [ev.target.id]: ev.target.value
     })
@@ -91,21 +161,67 @@ class DisplayBuild extends Component {
   }
 
   render () {
-    const { build, comments } = this.props;
-    console.log(this.props)
+    const { build, comments, replies, auth } = this.props;
     let displayComments;
-
+    let repliesToComment;
     if (comments) {
       displayComments = comments.map((comment) => {
-        return (
+        // all the replies are fetched
+        // filter all the replies that are for the current comment
+        // map through the array and make JSX elements to display
+        if (replies && auth.uid) {
+          repliesToComment = replies
+          .filter((reply) => {
+            return reply.commentReplyingToId === comment.id;
+          })
+          .map((reply) => {
+            return (
+              <div className={classes["replies"]}>
+                <p>{reply.creator}  </p>
+                <p>{reply.replyMessage}</p>
+              </div>
+            )
+          });
+        } else {
+          repliesToComment = null;
+        }
+
+        let jsxComment = (
           <div>
             <p>
-              { comment.creator }
+              {comment.creator}
             </p>
             <p>
-              { comment.comment }
+              {comment.comment}
             </p>
+            
+            {/* only show reply button if the user is signed in */}
+            {auth.uid ? (<button onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
+            <form className={classes['reply-form']} id={comment.id} onSubmit={this.handleCreateReply}>
+              <div>
+                <label htmlFor='reply'></label>
+                <textarea
+                  id='reply'
+                  value={this.state.reply}
+                  cols='100'
+                  rows='5'
+                  onChange={this.handleChange}
+                  placeholder="create a reply!" />
+              </div>
+              <div>
+                <button>
+                  reply
+                </button>
+              </div>
+            </form>
+
+            {/* display replies here! */}
+            { replies ? repliesToComment : null }
           </div>
+          )
+
+        return (
+         jsxComment 
         )
       })
     } else {
@@ -156,7 +272,7 @@ class DisplayBuild extends Component {
                 value={this.state.comment}
                 cols='100'
                 rows='5'
-                onChange={this.handleCommentChange}
+                  onChange={this.handleChange}
                 placeholder="create a comment!" />
             </div>
             <div>
@@ -193,6 +309,7 @@ class DisplayBuild extends Component {
   return {
     build: build,
     comments: state.firestore.ordered.comments,
+    replies: state.firestore.ordered.replies,
     auth: state.firebase.auth
   }
 }
@@ -210,6 +327,11 @@ const mapDispatchToProps = (dispatch) => {
     createComment: (comment) => {
       console.log('dispatching create comment')
       dispatch(createCommentAction(comment));
+    },
+
+    replyToComment: (replyData) => {
+      console.log('replying to a comment');
+      dispatch(createReplyAction(replyData))
     }
   }
 }
@@ -218,6 +340,7 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
     { collection: 'builds' },
-    { collection: 'comments', orderBy: ['createdAt', 'desc'] }
+    { collection: 'comments', orderBy: ['createdAt', 'desc'] },
+    { collection: 'replies', orderBy: ['createdAt', 'desc'] },
   ]),
 )(DisplayBuild);

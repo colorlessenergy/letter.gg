@@ -57,6 +57,42 @@ export const createCommentAction = (comment) => {
   }
 }
 
+
+/**
+ * 
+ * @param {Object} reply - holds data about the reply
+ * @param {String} replyMessage - the message the user created
+ * @param {String} commentReplyingToId - the id of the comment the user is replying too
+ */
+export const createReplyAction = (reply) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    const profile = getState().firebase.profile;
+    const authorId = getState().firebase.auth.uid;
+
+
+    // have to make a separate collection instead of subcollection
+    // because it is a cleaner and painless way of
+    // fetching all the replies to a comment
+    
+    return firestore.collection('replies')
+      .add({
+        replyMessage: reply.replyMessage,
+        commentReplyingToId: reply.commentReplyingToId,
+        creator: profile.username,
+        authorId: authorId,
+        createdAt: new Date()
+      })
+      .then(() => {
+        dispatch({ type: 'CREATE_REPLY_SUCCESS' });
+      })
+      .catch(err =>  {
+        dispatch({ type: 'CREATE_REPLY_ERROR', err });
+      })
+  }
+}
+
 /**
  * takes in new information about a build and updates it in firestore
  * 
