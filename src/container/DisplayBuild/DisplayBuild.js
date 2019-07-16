@@ -6,7 +6,12 @@ import { compose } from 'redux';
 import { Redirect } from'react-router';
 import { Link } from 'react-router-dom';
 
-import { upvoteBuildAction, removeUpvoteBuildAction, createCommentAction, createReplyAction } from '../../store/actions/buildsAction';
+import { upvoteBuildAction, 
+  removeUpvoteBuildAction, 
+  createCommentAction, 
+  createReplyAction,
+  deleteCommentAction,
+  deleteReplyAction } from '../../store/actions/buildsAction';
 
 import classes from './DisplayBuild.module.css';
 
@@ -77,7 +82,8 @@ class DisplayBuild extends Component {
 
     let replyData = {
       commentReplyingToId: this.state.replyingToID,
-      replyMessage: this.state.reply
+      replyMessage: this.state.reply,
+      buildId: this.props.match.params.id
     }
     // dispatch the action to create a replyv
     this.props.replyToComment(replyData)
@@ -160,6 +166,18 @@ class DisplayBuild extends Component {
     }
   }
 
+  handleDeleteComment = (ev) => {
+    let commentId = ev.target.getAttribute('data-commentid');
+
+    this.props.deleteComment(commentId);
+  }
+
+  handleDeleteReply = (ev) => {
+    let replyId = ev.target.getAttribute('data-replyid');
+
+    this.props.deleteReply(replyId);
+  }
+
   render () {
     const { build, comments, replies, auth } = this.props;
     let displayComments;
@@ -169,7 +187,7 @@ class DisplayBuild extends Component {
         // all the replies are fetched
         // filter all the replies that are for the current comment
         // map through the array and make JSX elements to display
-        if (replies && auth.uid) {
+        if (replies) {
           repliesToComment = replies
           .filter((reply) => {
             return reply.commentReplyingToId === comment.id;
@@ -179,6 +197,12 @@ class DisplayBuild extends Component {
               <div className={classes["replies"]}>
                 <p>{reply.creator}  </p>
                 <p>{reply.replyMessage}</p>
+                {/* only show the delete reply button if the user signed in is the user that made the reply */}
+                {reply.authorId === auth.uid ? (
+                  <p data-replyid={reply.id} onClick={this.handleDeleteReply}>
+                    delete
+                  </p>
+                ) : null}
               </div>
             )
           });
@@ -194,6 +218,13 @@ class DisplayBuild extends Component {
             <p>
               {comment.comment}
             </p>
+
+            {/* only show the delete comment button if the user signed in is the user that made the comment */}
+            {comment.authorId === auth.uid ? (
+            <p data-commentid={comment.id} onClick={this.handleDeleteComment}>
+              delete
+            </p>
+            ) : null }
             
             {/* only show reply button if the user is signed in */}
             {auth.uid ? (<button onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
@@ -305,7 +336,6 @@ class DisplayBuild extends Component {
   const id = ownProps.match.params.id;
   const builds = state.firestore.data.builds;
   const build = builds ? builds[id] : null;
-  console.log(state)
   return {
     build: build,
     comments: state.firestore.ordered.comments,
@@ -325,13 +355,19 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     createComment: (comment) => {
-      console.log('dispatching create comment')
       dispatch(createCommentAction(comment));
     },
 
     replyToComment: (replyData) => {
-      console.log('replying to a comment');
       dispatch(createReplyAction(replyData))
+    },
+
+    deleteComment: (commentId) => {
+      dispatch(deleteCommentAction(commentId));
+    },
+
+    deleteReply: (replyId) => {
+      dispatch(deleteReplyAction(replyId));
     }
   }
 }

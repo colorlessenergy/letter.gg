@@ -43,6 +43,30 @@ const buildReducer = (state=initState, action) => {
         authError: null
       }
 
+    case 'DELETE_BUILD_SUCCESS':
+      console.log('successfully delete the build');
+      return state;
+
+    case 'DELETE_BUILD_ERROR':
+      console.log('delete build err', action.err);
+      return state;
+
+    case 'DELETE_COMMENT_SUCCESS':
+      console.log('successfully delete the comment');
+      return state;
+
+    case 'DELETE_COMMENT_ERROR':
+      console.log('delete comment err', action.err);
+      return state;
+
+    case 'DELETE_REPLY_SUCCESS':
+      console.log('successfully delete the reply');
+      return state;
+
+    case 'DELETE_REPLY_ERROR':
+      console.log('delete reply err', action.err);
+      return state;
+
     case 'UPVOTE_BUILD_SUCCESS':
       console.log('upvote build success');
       return {

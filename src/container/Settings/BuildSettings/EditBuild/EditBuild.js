@@ -5,7 +5,7 @@ import ItemFormBuild from '../../../Build/ItemsFormBuild';
 import CompFormBuild from '../../../Build/CompFormBuild';
 import ContentFormBuild from '../../../Build/ContentFormBuild';
 
-import { editBuildAction } from '../../../../store/actions/buildsAction';
+import { editBuildAction, deleteBuildAction } from '../../../../store/actions/buildsAction';
 
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -14,7 +14,7 @@ import { Redirect } from 'react-router-dom';
 
 
 /**
- * this is the form to edit a build
+ * this is the form to edit and delete the build
  * 
  */
 
@@ -83,6 +83,10 @@ class EditBuild extends Component {
 
   }
 
+  handleDeleteBuild = () => {
+    this.props.deleteBuild(this.props.match.params.id, this.props.history);
+  }
+
   render() {
     const { auth, authError, build } = this.props;
     
@@ -90,30 +94,37 @@ class EditBuild extends Component {
     if (!auth.uid) return <Redirect to='/login' />
 
     return (
-      <form onSubmit={this.handleSubmit}>
-        <h2>pick a title</h2>
-        <TitleFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false} title={ build ? build.title : '' } handleChange={this.handleChange} />
+      <div>
+        {/* button to delete a build */}
+        <p onClick={this.handleDeleteBuild}>
+          delete this build !
+        </p>
         
-        <h2>pick your champion</h2>
-        <ChampionFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false} champion={build ? build.champion : ''} handleChange={this.handleChange} />
-        
-        <h2>pick the best items for this champion</h2>
-        <ItemFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false} items={ build ? build.items : []  } handleChange={this.handleChange} />
-        
-        <h2>pick champions that work best with this champion</h2>
-        <CompFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false} comp={build ? build.comp : []} handleChange={this.handleChange} />
-        
-        <h2>write about why this is the best way to use this champion in team fight tactics</h2>
-        <ContentFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false} content={build ? build.content : ''} handleChange={this.handleChange} />
-        <div>
-          <button>
-            update
-          </button>
-          { authError ? <p>{ authError }</p>: null }
+        <form onSubmit={this.handleSubmit}>
+          <h2>pick a title</h2>
+          <TitleFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false} title={build ? build.title : ''} handleChange={this.handleChange} />
 
-          { this.state.currentDataNeededFilled ? <p>{ this.state.currentDataNeededFilled }</p> : null }
-        </div>
-      </form>
+          <h2>pick your champion</h2>
+          <ChampionFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false} champion={build ? build.champion : ''} handleChange={this.handleChange} />
+
+          <h2>pick the best items for this champion</h2>
+          <ItemFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false} items={build ? build.items : []} handleChange={this.handleChange} />
+
+          <h2>pick champions that work best with this champion</h2>
+          <CompFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false} comp={build ? build.comp : []} handleChange={this.handleChange} />
+
+          <h2>write about why this is the best way to use this champion in team fight tactics</h2>
+          <ContentFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false} content={build ? build.content : ''} handleChange={this.handleChange} />
+          <div>
+            <button>
+              update
+          </button>
+            {authError ? <p>{authError}</p> : null}
+
+            {this.state.currentDataNeededFilled ? <p>{this.state.currentDataNeededFilled}</p> : null}
+          </div>
+        </form>
+      </div>
     );
   }
 }
@@ -133,6 +144,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     editBuild: (build, history) => {
       return dispatch(editBuildAction(build, history))
+    },
+
+    deleteBuild: (buildId, history) => {
+      return dispatch(deleteBuildAction(buildId, history));
     }
   }
 }
