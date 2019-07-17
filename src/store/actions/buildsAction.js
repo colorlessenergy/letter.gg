@@ -61,8 +61,8 @@ export const createCommentAction = (comment) => {
 /**
  * 
  * @param {Object} reply - holds data about the reply
- * @param {String} replyMessage - the message the user created
- * @param {String} commentReplyingToId - the id of the comment the user is replying too
+ * @param {String} message - the message the user created
+ * @param {String} commentId - the id of the comment the user is replying too
  */
 export const createReplyAction = (reply) => {
   return (dispatch, getState, { getFirestore }) => {
@@ -78,8 +78,8 @@ export const createReplyAction = (reply) => {
     
     return firestore.collection('replies')
       .add({
-        replyMessage: reply.replyMessage,
-        commentReplyingToId: reply.commentReplyingToId,
+        message: reply.message,
+        commentId: reply.commentId,
         buildId: reply.buildId,
         creator: profile.username,
         authorId: authorId,
@@ -267,5 +267,39 @@ export const deleteReplyAction = (replyId) => {
         dispatch({ type: 'DELETE_REPLY_SUCCESS' });
       })
       .catch(err => dispatch({ type: 'DELETE_REPLY_ERROR', err }));
+  }
+}
+
+export const editCommentAction = (comment) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection('comments')
+      .doc(comment.commentId)
+      .update({
+        comment: comment.message
+      })
+      .then(() => {
+        dispatch({ type: 'EDIT_COMMENT_SUCCESS' });
+      })
+      .catch(err => dispatch({ type: 'EDIT_COMMENT_ERROR', err }));
+  }
+}
+
+export const editReplyAction = (reply) => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+
+    firestore
+      .collection('replies')
+      .doc(reply.replyId)
+      .update({
+        message: reply.message
+      })
+      .then(() => {
+        dispatch({ type: 'EDIT_REPLY_SUCCESS' });
+      })
+      .catch(err => dispatch({ type: 'EDIT_REPLY_ERROR', err}));
   }
 }
