@@ -11,7 +11,9 @@ import { upvoteBuildAction,
   createCommentAction, 
   createReplyAction,
   deleteCommentAction,
-  deleteReplyAction } from '../../store/actions/buildsAction';
+  deleteReplyAction,
+  editCommentAction,
+  editReplyAction } from '../../store/actions/buildsAction';
 
 import classes from './DisplayBuild.module.css';
 
@@ -25,9 +27,13 @@ class DisplayBuild extends Component {
 
   state = {
     userLikedBuild: false,
+    // this input is to create a comment
     comment: '',
-    reply: '',
-    replyingToID: ''
+    // this input is to edit a comment or reply
+    message: '',
+    commentId: '',
+    replyId: '',
+    action: null
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -57,11 +63,13 @@ class DisplayBuild extends Component {
     }
 
     this.setState({
-      comment: ''
+      comment: '',
+      messge: ''
     })
 
     this.props.createComment(comment);
   }
+
 
   /**
    * when a reply box is submitted 
@@ -69,24 +77,37 @@ class DisplayBuild extends Component {
    * and create a document in firestore for the replies collection
    */
 
-  handleCreateReply = (ev) => {
+  handleCreateReplyOrEdit = (ev) => {
     ev.preventDefault();
 
-    // hide the form to create a reply
 
-    let form = document.querySelector('#' + this.state.replyingToID);
+    // hide the form to create a reply or edit
+    let form = document.querySelector('#a' + this.state.commentId);
     form.classList.toggle(classes.show);
+  
     this.setState({
-      replyingToID: ''
+      commentId: '',
+      replyId: '',
+      message: ''
     });
 
-    let replyData = {
-      commentReplyingToId: this.state.replyingToID,
-      replyMessage: this.state.reply,
+    let commentData = {
+      commentId: this.state.commentId,
+      replyId: this.state.replyId,
+      message: this.state.message,
       buildId: this.props.match.params.id
     }
-    // dispatch the action to create a replyv
-    this.props.replyToComment(replyData)
+
+    if (this.state.action === 'edit-comment') {
+      this.props.editComment(commentData);
+
+    } else if (this.state.action === 'edit-reply') {
+      this.props.editReply(commentData);
+
+    } else if (this.state.action === 'reply') {
+      // dispatch the action to create a reply
+      this.props.replyToComment(commentData)
+    }
   }
   
   /**
@@ -96,38 +117,79 @@ class DisplayBuild extends Component {
    */
 
   handleShowReplyForm = (ev) => {
-    
+    this.setState({
+      action: 'reply',
+    });
+
+    this.showTextArea(ev);
+  }
+
+  handleShowEditCommentForm = (ev) => {
+    this.setState({
+      action: 'edit-comment',
+    });
+
+    this.showTextArea(ev);
+  }
+
+  handleShowEditReplyForm = (ev) => {
+    let replyId = ev.target.getAttribute('data-replyid');
+
+    this.setState({
+      action: 'edit-reply',
+      replyId: replyId
+    });
+
+    this.showTextArea(ev);
+  }
+
+  /**
+   * use the commentId state to open the form text box
+   * or close it
+   */
+
+  showTextArea = (ev) => {
     let commentId = ev.target.getAttribute('data-commentid');
 
-    // if the user clicks on reply button and it has already been pressed   
+
+    // user previously clicked on the reply or edit button 
+    // use the same box
+    if (this.state.commentId && this.state.commentId === commentId) {
+      let form = document.querySelector('#a' + this.state.commentId);
+      if (form.classList.length > 1) {
+        return;
+      }
+    }
+
+    // if the user clicks on reply or edit button and it has been pressed before  
     // close it.
-    if (this.state.replyingToID === commentId) {
-      let form = document.querySelector('#' + this.state.replyingToID);
+    if (this.state.commentId === commentId) {
+      let form = document.querySelector('#a' + this.state.commentId);
       form.classList.toggle(classes.show);
 
       return this.setState({
-        replyingToID: ''
+        commentId: ''
       });
     }
 
-    // close previous reply box if a person click on to reply to a new comment
-    if (this.state.replyingToID !== commentId && this.state.replyingToID) {
-      let form = document.querySelector('#' + this.state.replyingToID);
+    // close previous chat box if a person click on to reply or edit on a new comment
+    if (this.state.commentId !== commentId && this.state.commentId) {
+      let form = document.querySelector('#a' + this.state.commentId);
       form.classList.toggle(classes.show);
 
       this.setState({
-        reply: '',
-        replyingToID: ''
+        message: '',
+        commentId: ''
       })
     }
-    
-    // show the reply box
-    let form = document.querySelector('#' + commentId);
-    form.classList.toggle(classes.show);
-    this.setState({
-      replyingToID: commentId
-    });
 
+    // show the edit box
+    let form = document.querySelector('#a' + commentId);
+    form.classList.toggle(classes.show);
+
+    this.setState({
+      commentId: commentId
+    });
   }
 
   handleChange = (ev) => {
@@ -190,18 +252,24 @@ class DisplayBuild extends Component {
         if (replies) {
           repliesToComment = replies
           .filter((reply) => {
-            return reply.commentReplyingToId === comment.id;
+            return reply.commentId === comment.id;
           })
           .map((reply) => {
             return (
               <div className={classes["replies"]}>
                 <p>{reply.creator}  </p>
-                <p>{reply.replyMessage}</p>
+                <p>{reply.message}</p>
                 {/* only show the delete reply button if the user signed in is the user that made the reply */}
                 {reply.authorId === auth.uid ? (
-                  <p data-replyid={reply.id} onClick={this.handleDeleteReply}>
-                    delete
-                  </p>
+                  <div>
+                    <p data-replyid={reply.id} onClick={this.handleDeleteReply}>
+                      delete
+                    </p>
+                    <p data-replyid={reply.id} data-commentid={comment.id} onClick={this.handleShowEditReplyForm}>
+                      edit
+                    </p>
+                  </div>
+                    
                 ) : null}
               </div>
             )
@@ -221,31 +289,40 @@ class DisplayBuild extends Component {
 
             {/* only show the delete comment button if the user signed in is the user that made the comment */}
             {comment.authorId === auth.uid ? (
-            <p data-commentid={comment.id} onClick={this.handleDeleteComment}>
-              delete
-            </p>
+            <div>
+              <p data-commentid={comment.id} onClick={this.handleDeleteComment}>
+                delete
+              </p>
+              <p data-commentid={comment.id} onClick={this.handleShowEditCommentForm}>
+                edit
+              </p>
+            </div>
             ) : null }
             
             {/* only show reply button if the user is signed in */}
             {auth.uid ? (<button onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
-            <form className={classes['reply-form']} id={comment.id} onSubmit={this.handleCreateReply}>
+            {/* 
+            i have to add an 'a' to the id because sometimes the id that firebase assigns has a number in the front
+            and that isn't a valid css selector
+             */}
+            <form className={classes['reply-form']} id={'a' + comment.id } onSubmit={this.handleCreateReplyOrEdit}>
               <div>
-                <label htmlFor='reply'></label>
+
+                <label htmlFor='message'></label>
                 <textarea
-                  id='reply'
-                  value={this.state.reply}
+                  id='message'
+                  value={this.state.message}
                   cols='100'
                   rows='5'
                   onChange={this.handleChange}
-                  placeholder="create a reply!" />
+                  placeholder={ 'create a ' + this.state.action } />
               </div>
               <div>
                 <button>
-                  reply
+                  submit
                 </button>
               </div>
             </form>
-
             {/* display replies here! */}
             { replies ? repliesToComment : null }
           </div>
@@ -368,6 +445,14 @@ const mapDispatchToProps = (dispatch) => {
 
     deleteReply: (replyId) => {
       dispatch(deleteReplyAction(replyId));
+    },
+
+    editComment: (commentData) => {
+      dispatch(editCommentAction(commentData));
+    },
+
+    editReply: ( commentData ) => {
+      dispatch(editReplyAction(commentData));
     }
   }
 }

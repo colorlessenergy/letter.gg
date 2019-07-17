@@ -67,6 +67,22 @@ const buildReducer = (state=initState, action) => {
       console.log('delete reply err', action.err);
       return state;
 
+    case 'EDIT_COMMENT_SUCCESS':
+      console.log('successfully edit the comment');
+      return state;
+
+    case 'EDIT_COMMENT_ERROR':
+      console.log('edit comment err', action.err);
+      return state;
+    
+    case 'EDIT_REPLY_SUCCESS':
+      console.log('successfully edit the reply');
+      return state;
+
+    case 'EDIT_REPLY_ERROR':
+      console.log('edit reply err', action.err);
+      return state;
+    
     case 'UPVOTE_BUILD_SUCCESS':
       console.log('upvote build success');
       return {
@@ -80,6 +96,7 @@ const buildReducer = (state=initState, action) => {
         ...state,
         authError: action.err
       }
+    
 
 
     default:
