@@ -136,25 +136,24 @@ class ItemsFormBuild extends Component {
       <React.Fragment>
         { itemIcons }
         <div>
-          <label
-            htmlFor='item'>
-            item
-        </label>
+          <label htmlFor='item'>item</label>
           <input
-            type='text'
             id='item'
+            type='text'
             onChange={this.handleChange}
-            value={this.state.item}>
-          </input>
-          {/* form validation for the user */}
-
+            value={this.state.item} />
+          {/*
+            regular error handling when user is typing
+          */}
           {
             this.state.currentDataNeededFilled ?
               <p>{this.state.currentDataNeededFilled}</p> :
               null
           }
-
-          {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+          {/*
+            when the user presses submit and doesn't type anything in the input
+            display an error
+          */}
           {
             !this.state.currentDataNeededFilled && this.props.missingInfo ?
               <p>at most 3 items are needed</p> :

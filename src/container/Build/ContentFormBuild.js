@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 class ContentFormBuild extends Component {
   state = {
     dataFilled: false,
-    content: 'write about why this is the best way to use this champion in team fight tactics'
+    content: ''
   }
 
   // pass down the props of the parent component
@@ -19,9 +22,9 @@ class ContentFormBuild extends Component {
     }
   }
 
-  handleChange = (ev) => {
+  onQuillChange = (e) => {
     this.setState({
-      [ev.target.id]: ev.target.value
+      content: e
     }, () => {
         if (this.state.content === '') {
           this.setState({
@@ -35,29 +38,59 @@ class ContentFormBuild extends Component {
     });
 
     // lift the state of this component to the main component to be able to save to a database
-    this.props.handleChange({ [ev.target.id]: ev.target.value });
+    this.props.handleChange({ content: this.state.content });
   }
+
+  modules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }, { font: [] }],
+      [{size: []}],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{list: 'ordered'}, {list: 'bullet'}],
+      ['link'],
+      ['clean'],
+      ['code-block']
+    ]
+  };
+
+  formats = [
+    'header',
+    'font',
+    'size',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'link',
+    'code-block'
+  ];
 
   render () {
     return (
       <div>
-        <label htmlFor='content'></label>
-        <textarea 
-          id='content'
+        <label htmlFor='content'>Content: </label>
+        <ReactQuill
+          id="content"
+          modules={this.modules}
+          formats={this.formats}
           value={this.state.content}
-          cols='100'
-          rows='5'
-          onChange={this.handleChange} />
-
-        {/* form validation for the user */}
-
+          placeholder='write about why this is the best way to use this champion in team fight tactics'
+          onChange={this.onQuillChange} />
+        {/*
+          regular error handling when user is typing
+        */}
         {
           this.state.currentDataNeededFilled ?
             <p>{this.state.currentDataNeededFilled}</p> :
             null
         }
-
-        {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+        {/*
+          when the user presses submit and doesn't type anything in the input
+          display an error
+        */}
         {
           !this.state.currentDataNeededFilled && this.props.missingInfo ?
             <p>you need to write something!</p> :
