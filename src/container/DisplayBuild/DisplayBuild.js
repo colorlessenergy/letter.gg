@@ -17,6 +17,8 @@ import { upvoteBuildAction,
 
 import classes from './DisplayBuild.module.css';
 
+// for quill to display the html
+import renderHTML from 'react-render-html';
 
 /**
  * display a single build
@@ -366,9 +368,9 @@ class DisplayBuild extends Component {
           return <img src={championIcon} alt={champion} key={champion} />
         })}
 
-        <p>
-          {build.comment}
-        </p>
+        <div>
+          { renderHTML(build.content) }
+        </div>
 
         {/* a form to create a comment */}
           {this.props.auth.uid ? (

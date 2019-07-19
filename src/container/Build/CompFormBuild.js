@@ -130,26 +130,24 @@ class CompFormBuild extends Component {
       <React.Fragment>
         {pickedChampions}
         <div>
-          <label
-            htmlFor='champion'>
-            Champion
-        </label>
+          <label htmlFor='champion'>Champion</label>
           <input
-            type='text'
             id='champion'
+            type='text'
             onChange={this.handleChange}
-            value={this.state.champion}>
-          </input>
-
-          {/* form validation for the user */}
-
+            value={this.state.champion} />
+          {/*
+            regular error handling when user is typing
+          */}
           {
             this.state.currentDataNeededFilled ?
               <p>{this.state.currentDataNeededFilled}</p> :
               null
           }
-
-          {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+          {/*
+            when the user presses submit and doesn't type anything in the input
+            display an error
+          */}
           {
             !this.state.currentDataNeededFilled && this.props.missingInfo ?
               <p>a single champion is needed!</p> :

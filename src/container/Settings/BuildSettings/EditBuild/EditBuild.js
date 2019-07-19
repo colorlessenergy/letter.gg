@@ -34,7 +34,7 @@ class EditBuild extends Component {
     // preset values so the user sees the current 
     // configuration for the build they are editing
 
-    if (!state.dataFilled) {
+    if (!state.dataFilled && build) {
      return {
         title: build.title,
         champion: build.champion,
@@ -96,32 +96,43 @@ class EditBuild extends Component {
     return (
       <div>
         {/* button to delete a build */}
-        <p onClick={this.handleDeleteBuild}>
-          delete this build !
-        </p>
+        <p onClick={this.handleDeleteBuild}>delete this build !</p>
         
         <form onSubmit={this.handleSubmit}>
           <h2>pick a title</h2>
-          <TitleFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false} title={build ? build.title : ''} handleChange={this.handleChange} />
+          <TitleFormBuild
+            missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false}
+            title={build ? build.title : ''}
+            handleChange={this.handleChange} />
 
           <h2>pick your champion</h2>
-          <ChampionFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false} champion={build ? build.champion : ''} handleChange={this.handleChange} />
+          <ChampionFormBuild
+            missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false}
+            champion={build ? build.champion : ''}
+            handleChange={this.handleChange} />
 
           <h2>pick the best items for this champion</h2>
-          <ItemFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false} items={build ? build.items : []} handleChange={this.handleChange} />
+          <ItemFormBuild
+            missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false}
+            items={build ? build.items : []}
+            handleChange={this.handleChange} />
 
           <h2>pick champions that work best with this champion</h2>
-          <CompFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false} comp={build ? build.comp : []} handleChange={this.handleChange} />
+          <CompFormBuild
+            missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false}
+            comp={build ? build.comp : []}
+            handleChange={this.handleChange} />
 
           <h2>write about why this is the best way to use this champion in team fight tactics</h2>
-          <ContentFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false} content={build ? build.content : ''} handleChange={this.handleChange} />
+          <ContentFormBuild
+            missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false}
+            content={build ? build.content : ''} 
+            handleChange={this.handleChange} />
           <div>
-            <button>
-              update
-          </button>
-            {authError ? <p>{authError}</p> : null}
-
-            {this.state.currentDataNeededFilled ? <p>{this.state.currentDataNeededFilled}</p> : null}
+          
+          <button>update</button>
+          {authError ? <p>{authError}</p> : null}
+          {this.state.currentDataNeededFilled ? <p>{this.state.currentDataNeededFilled}</p> : null}
           </div>
         </form>
       </div>

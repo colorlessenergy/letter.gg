@@ -105,25 +105,25 @@ class ChampionFormBuild extends Component {
       <React.Fragment>
         {this.state.imageURL ? <img src={this.state.imageURL} alt={this.state.champion} /> : null }
         <div>
-          <label
-            htmlFor='champion'>Champion: </label>
+          <label htmlFor='champion'>Champion: </label>
           <input
-            type='text'
             id='champion'
+            type='text'
             onChange={this.handleChange}
             value={this.state.champion} />
         </div>
-
-        {/* form validation for the user */}
-        
+        {/*
+            regular error handling when user is typing
+        */}
         {
           this.state.currentDataNeededFilled ? 
           <p>{this.state.currentDataNeededFilled }</p> : 
           null 
         }
-
-        {/* display errors if a user doesn't type anything or miss wiht the inputs */}
-
+        {/*
+            when the user presses submit and doesn't type anything in the input
+            display an error
+        */}
         {
           !this.state.currentDataNeededFilled && this.props.missingInfo ?
             <p>a champion is needed!</p> :

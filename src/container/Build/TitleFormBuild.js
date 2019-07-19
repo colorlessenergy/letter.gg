@@ -44,25 +44,26 @@ class TitleFormBuild extends Component {
   }
 
   render() {
-
-    console.log(this.props)
-
     return (
       <div>
-        <label
-          htmlFor='title'>Title: </label>
+        <label htmlFor='title'>Title: </label>
         <input
-          type='text'
           id='title'
+          type='text'
           onChange={this.handleChange}
           value={this.state.title} />
+        {/*
+          regular error handling when user is typing
+        */}
         { 
           this.state.currentDataNeededFilled ? 
           <p>{ this.state.currentDataNeededFilled }</p> : 
           null 
         }
-
-        {/* display errors if a user doesn't type anything or miss wiht the inputs */}
+        {/*
+          when the user presses submit and doesn't type anything in the input
+          display an error
+        */}
         {
           !this.state.currentDataNeededFilled && this.props.missingInfo ?
             <p>A title is needed</p> :
