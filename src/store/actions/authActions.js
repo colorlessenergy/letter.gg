@@ -225,7 +225,7 @@ export const DeleteUserAction = () => {
       })
 
       .then(() => {
-        //  delete all the usre replies
+        //  delete all the user replies
         return firestore
           .collection('replies')
           .where('authorId', '==', userId)
