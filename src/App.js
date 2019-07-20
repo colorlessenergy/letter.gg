@@ -15,6 +15,7 @@ import UserSettings from './container/Settings/UserSettings/UserSettings';
 import UserSettingsUpdateEmail from './container/Settings/UserSettings/UserSettingsForms/UpdateUserEmail';
 import UserSettingsUpdatePassword from './container/Settings/UserSettings/UserSettingsForms/UpdateUserPassword';
 import UserSettingsUpdateUsername from './container/Settings/UserSettings/UserSettingsForms/UpdateUserUsername';
+import UserSettingsDeleteUser from './container/Settings/UserSettings/UserSettingsForms/DeleteUserAccount';
 
 
 import DisplayBuild from './container/DisplayBuild/DisplayBuild';
@@ -44,6 +45,7 @@ function App() {
       <Route path='/updateemail' exact component={UserSettingsUpdateEmail} />
       <Route path='/updatepassword' exact component={UserSettingsUpdatePassword} />
       <Route path='/updateusername' exact component={UserSettingsUpdateUsername} />
+      <Route path='/deleteuser' exact component={UserSettingsDeleteUser} />
     </BrowserRouter>
   );
 }

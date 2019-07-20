@@ -159,6 +159,119 @@ export const logOut = () => {
   }
 };
 
+/**
+ * delete all the content the user created
+ * this includes replies, comments, builds, and post they liked
+ * 
+ * The upvote count will not be changed beecause the user
+ * must of liked it and i want to keep that their so it
+ * can help other people who are looking for builds
+ * 
+ */
+
+export const DeleteUserAction = () => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    // delete all the users build, comments and replies
+    const firestore = getFirestore();
+    const userId = getState().firebase.auth.uid;
+
+    firestore
+    .collection('builds')
+    .get()
+    .then((querySnapshot) => {      
+
+      querySnapshot.forEach((doc) => {
+        firestore
+          .collection('builds')
+          .doc(doc.id)
+          .update({
+            usersLikedBuild: firestore.FieldValue.arrayRemove(userId)
+          });
+          
+      });
+
+      // delete all the user builds in firestore
+      return firestore
+        .collection('builds')
+        .where('authorId', '==', userId)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            firestore
+              .collection('builds')
+              .doc(doc.id)
+              .delete()
+              .catch(err => dispatch({ type: 'DELETE_ERROR', err }));
+          });
+
+        });
+      })
+
+      // delete all the user comments
+      .then(() => {
+        return firestore
+          .collection('comments')
+          .where('authorId', '==', userId)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              firestore
+                .collection('comments')
+                .doc(doc.id)
+                .delete()
+                .catch(err => dispatch({ type: 'DELETE_ERROR', err }));
+            })
+          })
+      })
+
+      .then(() => {
+        //  delete all the user replies
+        return firestore
+          .collection('replies')
+          .where('authorId', '==', userId)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              firestore
+                .collection('replies')
+                .doc(doc.id)
+                .delete()
+                .catch(err => dispatch({ type: 'DELETE_ERROR', err }))
+            })
+          });
+      })
+      .then(() => {
+        let usernameCollection = firestore.collection('usernames');
+        const profile = getState().firebase.profile;
+        // delete the user from the username collection
+        // to free up that username
+        return usernameCollection
+          .doc(profile.username)
+          .delete()
+          .catch(err => { console.log(err) })
+      })
+      .then(() => {
+        let usersCollection = firestore.collection('users');
+        return usersCollection
+          .doc(userId)
+          .delete()
+          .catch(err => { console.log(err) })
+      })
+      .then(() => {
+        const firebase = getFirebase();
+        return firebase.auth().currentUser
+          .delete()
+      })
+      .then(() => {
+        dispatch({ type: 'DELETE_SUCCESS' })
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: 'DELETE_ERROR', err })
+      })  
+  }
+}
+
 export const registerAction = (newUser) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     const firebase = getFirebase();

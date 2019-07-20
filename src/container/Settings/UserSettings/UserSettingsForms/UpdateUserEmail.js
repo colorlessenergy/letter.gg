@@ -31,11 +31,9 @@ class UpdateUserEmail extends Component {
 
   render () {
 
-    console.log(this.props)
     if (this.props.userUpdated) {
       this.props.history.goBack();
       return (<p> redirecting.. </p>);
-
     }
   
     if (!this.props.auth.uid) {

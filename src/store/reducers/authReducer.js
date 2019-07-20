@@ -52,6 +52,7 @@ const authReducer = (state=initState, action) => {
         ...state,
         // this will be used to redirect the user
         userUpdated: true,
+        // reset the state of reauthenticateSuccess
         reauthenticateSuccess: false
       }
 
@@ -71,6 +72,26 @@ const authReducer = (state=initState, action) => {
         ...state,
         reauthenticateSuccess: false,
         authError: action.err.message
+      }
+
+    case 'DELETE_SUCCESS':
+      console.log('delete user successfully');
+
+      return {
+        ...state,
+        authError: null,
+        accountIsDeleted: true,
+        // reset the state of reauthenticateSuccess
+        reauthenticateSuccess: false
+      };
+
+    case 'DELETE_ERROR':
+      console.log('delete user error', action.err);
+      
+      return {
+        ...state,
+        accountIsDeleted: false,
+        authError: action.err
       }
 
     
