@@ -24,6 +24,7 @@ class UserSettings extends Component {
         <Link to='/updateemail'>update email</Link>
         <Link to='/updatepassword'>update password</Link>
         <Link to='/updateusername'>update username</Link>
+        <Link to='/deleteuser'>delete user</Link>
       </div>
     )
   }
