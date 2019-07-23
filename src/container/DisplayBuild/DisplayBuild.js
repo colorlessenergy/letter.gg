@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase'
@@ -26,7 +28,6 @@ import renderHTML from 'react-render-html';
  */
 
 class DisplayBuild extends Component {
-
   state = {
     userLikedBuild: false,
     // this input is to create a comment
@@ -35,11 +36,11 @@ class DisplayBuild extends Component {
     message: '',
     commentId: '',
     replyId: '',
-    action: null
+    prevAction: null,
+    action: ''
   }
 
   static getDerivedStateFromProps(props, state) {
-
     if (props.build) {
       let allUsersLikedBuild = props.build.usersLikedBuild;
       let userUID = props.auth.uid;
@@ -47,27 +48,26 @@ class DisplayBuild extends Component {
       if (allUsersLikedBuild.indexOf(userUID)) {
         return {
           userLikedBuild: true
-        }
-      } else {
+        };
+      }
+      else {
         return {
           userLikedBuild: false
-        }
+        };
       }
     }
   }
-  
+
   handleCreateComment = (ev) => {
     ev.preventDefault();
-
     let comment = {
       comment: this.state.comment,
       buildId: this.props.match.params.id
-    }
-
+    };
     this.setState({
       comment: '',
       messge: ''
-    })
+    });
 
     this.props.createComment(comment);
   }
@@ -98,15 +98,16 @@ class DisplayBuild extends Component {
       replyId: this.state.replyId,
       message: this.state.message,
       buildId: this.props.match.params.id
-    }
+    };
 
     if (this.state.action === 'edit-comment') {
       this.props.editComment(commentData);
 
-    } else if (this.state.action === 'edit-reply') {
+    }
+    else if (this.state.action === 'edit-reply') {
       this.props.editReply(commentData);
-
-    } else if (this.state.action === 'reply') {
+    }
+    else if (this.state.action === 'reply') {
       // dispatch the action to create a reply
       this.props.replyToComment(commentData)
     }
@@ -119,30 +120,38 @@ class DisplayBuild extends Component {
    */
 
   handleShowReplyForm = (ev) => {
-    this.setState({
-      action: 'reply',
-    });
+    let buttonClicked = ev.target;
 
-    this.showTextArea(ev);
+    this.setState({
+      prevAction: this.state.action,
+      action: 'reply'
+    }, () => {
+      this.showTextArea(buttonClicked);
+    });
+    
   }
 
   handleShowEditCommentForm = (ev) => {
+    let buttonClicked = ev.target;
     this.setState({
-      action: 'edit-comment',
+      prevAction: this.state.action,
+      action: 'edit-comment'
+    }, () => {
+      this.showTextArea(buttonClicked);
     });
-
-    this.showTextArea(ev);
   }
 
   handleShowEditReplyForm = (ev) => {
     let replyId = ev.target.getAttribute('data-replyid');
+    let buttonClicked = ev.target;
 
     this.setState({
+      prevAction: this.state.action,
       action: 'edit-reply',
       replyId: replyId
+    }, () => {
+      this.showTextArea(buttonClicked);
     });
-
-    this.showTextArea(ev);
   }
 
   /**
@@ -150,28 +159,25 @@ class DisplayBuild extends Component {
    * or close it
    */
 
-  showTextArea = (ev) => {
-    let commentId = ev.target.getAttribute('data-commentid');
-
-
-    // user previously clicked on the reply or edit button 
-    // use the same box
-    if (this.state.commentId && this.state.commentId === commentId) {
-      let form = document.querySelector('#a' + this.state.commentId);
-      if (form.classList.length > 1) {
-        return;
-      }
-    }
-
-    // if the user clicks on reply or edit button and it has been pressed before  
-    // close it.
+  showTextArea = (buttonClicked) => {
+    let commentId = buttonClicked.getAttribute('data-commentid');
     if (this.state.commentId === commentId) {
       let form = document.querySelector('#a' + this.state.commentId);
-      form.classList.toggle(classes.show);
-
-      return this.setState({
-        commentId: ''
-      });
+      // user previously clicked on the reply or edit button 
+      // use the same box
+      if (form.classList.length > 1 && 
+      this.state.action !== this.state.prevAction) {
+        form.querySelector('.ql-editor').dataset.placeholder = 'Create a  ' + this.state.action;
+        return;
+      }
+      else {
+        // close reply box
+        form.classList.toggle(classes.show);
+        return this.setState({
+          commentId: '',
+          action: ''
+        });
+      }
     }
 
     // close previous chat box if a person click on to reply or edit on a new comment
@@ -181,13 +187,16 @@ class DisplayBuild extends Component {
 
       this.setState({
         message: '',
-        commentId: ''
+        commentId: '',
+        action: ''
       })
     }
 
-    // show the edit box
+    // show the textbox when none have been pressed initially 
+    // or one has been closed
     let form = document.querySelector('#a' + commentId);
     form.classList.toggle(classes.show);
+    form.querySelector('.ql-editor').dataset.placeholder = 'Create a ' + this.state.action;
 
     this.setState({
       commentId: commentId
@@ -197,18 +206,26 @@ class DisplayBuild extends Component {
   handleChange = (ev) => {
     this.setState({
       [ev.target.id]: ev.target.value
-    })
+    });
+  }
+
+  onQuillCommentChange = (ev) => {
+    this.setState({ comment: ev });
+  }
+
+  onQuillReplyChange = (ev) => {
+    this.setState({ message: ev });
   }
 
   handleUpvote = () => {
     if (!this.props.auth.uid) {
-      return <Redirect to='/login' />
+      return <Redirect to='/login' />;
     }
 
     let likedMetadata = {
       userId: this.props.auth.uid,
       buildId: this.props.match.params.id 
-    }
+    };
 
     if (likedMetadata.userId && likedMetadata.buildId) {
       this.props.upvoteBuild(likedMetadata);
@@ -217,13 +234,13 @@ class DisplayBuild extends Component {
 
   handleRemoveUpvote = () => {
     if (!this.props.auth.uid) {
-      return <Redirect to='/login' />
+      return <Redirect to='/login' />;
     }
 
     let likedMetadata = {
       userId: this.props.auth.uid,
       buildId: this.props.match.params.id
-    }
+    };
 
     if (likedMetadata.userId && likedMetadata.buildId) {
       this.props.removeUpvoteBuild(likedMetadata);
@@ -242,10 +259,39 @@ class DisplayBuild extends Component {
     this.props.deleteReply(replyId);
   }
 
+  modules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }, { font: [] }],
+      [{ size: [] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link'],
+      ['clean'],
+      ['code-block']
+    ]
+  }
+
+  formats = [
+    'header',
+    'font',
+    'size',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'blockquote',
+    'list',
+    'bullet',
+    'link',
+    'code-block'
+  ]
+
+
   render () {
     const { build, comments, replies, auth } = this.props;
     let displayComments;
     let repliesToComment;
+
     if (comments) {
       displayComments = comments.map((comment) => {
         // all the replies are fetched
@@ -258,20 +304,29 @@ class DisplayBuild extends Component {
           })
           .map((reply) => {
             return (
+              // ===============
+              // a reply
+              // ===============
               <div className={classes["replies"]}>
-                <p>{reply.creator}  </p>
-                <p>{reply.message}</p>
+                <p>{reply.creator}</p>
+                <div>
+                  { renderHTML(reply.message) }
+                </div>
                 {/* only show the delete reply button if the user signed in is the user that made the reply */}
                 {reply.authorId === auth.uid ? (
                   <div>
-                    <p data-replyid={reply.id} onClick={this.handleDeleteReply}>
+                    <p
+                      data-replyid={reply.id}
+                      onClick={this.handleDeleteReply}>
                       delete
                     </p>
-                    <p data-replyid={reply.id} data-commentid={comment.id} onClick={this.handleShowEditReplyForm}>
+                    <p
+                      data-replyid={reply.id}
+                      data-commentid={comment.id}
+                      onClick={this.handleShowEditReplyForm}>
                       edit
                     </p>
                   </div>
-                    
                 ) : null}
               </div>
             )
@@ -279,18 +334,19 @@ class DisplayBuild extends Component {
         } else {
           repliesToComment = null;
         }
-
+        // =================
+        // a comment
+        // =================
         let jsxComment = (
           <div>
             <p>
               {comment.creator}
             </p>
-            <p>
-              {comment.comment}
-            </p>
-
+            <div>
+              { renderHTML(comment.comment) }
+            </div>
             {/* only show the delete comment button if the user signed in is the user that made the comment */}
-            {comment.authorId === auth.uid ? (
+            { comment.authorId === auth.uid ? (
             <div>
               <p data-commentid={comment.id} onClick={this.handleDeleteComment}>
                 delete
@@ -302,88 +358,86 @@ class DisplayBuild extends Component {
             ) : null }
             
             {/* only show reply button if the user is signed in */}
-            {auth.uid ? (<button onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
+            { auth.uid ? (<button onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
             {/* 
             i have to add an 'a' to the id because sometimes the id that firebase assigns has a number in the front
             and that isn't a valid css selector
              */}
+            {/* ========================== */}
+            {/* form to create a reply */}
+            {/* ========================== */}
             <form className={classes['reply-form']} id={'a' + comment.id } onSubmit={this.handleCreateReplyOrEdit}>
               <div>
-
                 <label htmlFor='message'></label>
-                <textarea
+                <ReactQuill
                   id='message'
+                  modules={this.modules}
+                  formats={this.formats}
                   value={this.state.message}
-                  cols='100'
-                  rows='5'
-                  onChange={this.handleChange}
-                  placeholder={ 'create a ' + this.state.action } />
+                  onChange={this.onQuillReplyChange}
+                  data-placeholder='create a comment'
+                />
               </div>
               <div>
-                <button>
-                  submit
-                </button>
+                <button>submit</button>
               </div>
             </form>
             {/* display replies here! */}
             { replies ? repliesToComment : null }
           </div>
-          )
-
+        );
         return (
          jsxComment 
-        )
-      })
-    } else {
+        );
+      });
+    }
+    else {
       displayComments = (
-        <p>
-          no comments 
-        </p>
-      )
+        <p>no comments</p>
+      );
     }
     
     if (build) {
-
       // image for the main champion the build 
-      let championIcon = require(`../../assets/champion-icons/${build.champion}.png`)
+      let championIcon = require(`../../assets/champion-icons/${build.champion}.png`);
       return (
         <section key={build.champion}>
-        {
-          this.state.userLikedBuild ?
-          <p onClick={this.handleUpvote}>click here if you liked it</p>:
-          <p onClick={this.handleRemoveUpvote}>click here to unlike it</p>
-        }
+          {
+            this.state.userLikedBuild ?
+            <p onClick={this.handleUpvote}>click here if you liked it</p> :
+            <p onClick={this.handleRemoveUpvote}>click here to unlike it</p>
+          }
+          <h2>[{build.champion}] - {build.title}</h2>
+          <p>created by: { build.creator }</p>
+          <img src={championIcon} alt={build.champion} />
+          {build.items.map((item) => {
+            let itemIcon = require(`../../assets/item-icons/${item}.png`);
+            return <img src={itemIcon} alt={item} key={item} />
+          })}
 
-        <h2>[{build.champion}] - {build.title}</h2>
-        <p>created by: { build.creator }</p>
-        <img src={championIcon} alt={build.champion} />
-        {build.items.map((item) => {
-          let itemIcon = require(`../../assets/item-icons/${item}.png`);
-          return <img src={itemIcon} alt={item} key={item} />
-        })}
-
-        {build.comp.map((champion) => {
-          // images for champions that work well with the main champion
-          let championIcon = require(`../../assets/champion-icons/${champion}.png`);
-          return <img src={championIcon} alt={champion} key={champion} />
-        })}
-
-        <div>
-          { renderHTML(build.content) }
-        </div>
-
-        {/* a form to create a comment */}
+          {build.comp.map((champion) => {
+            // images for champions that work well with the main champion
+            let championIcon = require(`../../assets/champion-icons/${champion}.png`);
+            return <img src={championIcon} alt={champion} key={champion} />
+          })}
+          <div>
+            { renderHTML(build.content) }
+          </div>
+          {/* ========================== */}
+          {/* a form to create a comment */}
+          {/* ========================== */}
           {this.props.auth.uid ? (
           <form onSubmit={this.handleCreateComment}>
             <div>
               <label htmlFor='comment'></label>
-              <textarea
+              <ReactQuill
                 id='comment'
+                modules={this.modules}
+                formats={this.formats}
                 value={this.state.comment}
-                cols='100'
-                rows='5'
-                  onChange={this.handleChange}
-                placeholder="create a comment!" />
+                onChange={this.onQuillCommentChange}
+                placeholder='Create a comment'
+              />
             </div>
             <div>
               <button>
@@ -400,28 +454,29 @@ class DisplayBuild extends Component {
           ) }
           { displayComments }
       </section>
-    )
-  } else {
+    );
+  }
+  else {
     return (
        <div>
         {this.props.authError ? <p>{this.props.authError} </p> : <p> loading </p>}
        </div>
-      )
+      );
     }
   }
 }
 
   const mapStateToProps = (state, ownProps) => {
-  const id = ownProps.match.params.id;
-  const builds = state.firestore.data.builds;
-  const build = builds ? builds[id] : null;
-  return {
-    build: build,
-    comments: state.firestore.ordered.comments,
-    replies: state.firestore.ordered.replies,
-    auth: state.firebase.auth
+    const id = ownProps.match.params.id;
+    const builds = state.firestore.data.builds;
+    const build = builds ? builds[id] : null;
+    return {
+      build: build,
+      comments: state.firestore.ordered.comments,
+      replies: state.firestore.ordered.replies,
+      auth: state.firebase.auth
+    };
   }
-}
 
 const mapDispatchToProps = (dispatch) => {
   return {
