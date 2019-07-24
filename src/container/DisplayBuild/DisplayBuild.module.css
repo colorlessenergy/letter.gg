@@ -7,31 +7,61 @@
 }
 
 .replies {
-  margin-left: 30px;
+  margin-left: 26px;
 }
 
 .build {
-  margin: 10px;
+  margin: 10px 20px;
+}
+
+.build__title {
+  margin-top: 34px;
+}
+
+.build__main-title {
+  margin-top: 3px;
+  line-height: 21px;
 }
 
 .build__intro {
-  display: flex;
   align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
-.font--normal {
-  font-weight: normal;
-  font-size: 1em;
+.build__info-title {
+  color: #A6A6A6;
+  font-size: 0.9em;
+  margin: 0;
 }
 
-.build__category-title,
-.build__main-title {
+.build__info--ml {
+  margin-left: 5px;
+}
+
+.replies--ml, .comment--ml {
+  margin-left: 10px;
+}
+
+.build__champion-name {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.build__main-title--margin {
+  margin-left: 11px;
+  text-decoration: underline;
+}
+
+.build__category-title {
+  margin-bottom: 10px;
   text-decoration: underline;
 }
 
 .image {
   border-radius: 50%;
   margin-right: 12px;
+  width: 64px;
 }
 
 .build__login-prompt {
@@ -81,10 +111,6 @@
   margin-left: 10px;
 }
 
-.button--margin-left {
-  margin-left: 50px;
-}
-
 .button--margin-top {
   margin-top: 10px;
 }
@@ -99,4 +125,27 @@
   margin: 0;
   margin-right: 10px;
   cursor: pointer;
+}
+
+.build__build, 
+.build__team, 
+.build__guide {
+  margin-top: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .build {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .build__main-title {
+    font-size: 24px;
+    line-height: 28px;
+    margin-top: 16px;
+  }
+
+  .build__category-title {
+    font-size: 18px;
+  }
 }
