@@ -303,12 +303,16 @@ class DisplayBuild extends Component {
             return reply.commentId === comment.id;
           })
           .map((reply) => {
+            // format the date for the reply to month day, year
+            let date = new Date(reply.createdAt.seconds * 1000);
+            let dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            date = date.toLocaleDateString('en-US', dateOptions);
             return (
               // ===============
               // a reply
               // ===============
-              <div className={classes["replies"]}>
-                <p>{reply.creator}</p>
+              <div className={classes['replies']}>
+                <p>{reply.creator} <span className={classes['replies--ml']}>{date}</span></p>
                 <div>
                   { renderHTML(reply.message) }
                 </div>
@@ -341,9 +345,13 @@ class DisplayBuild extends Component {
         // =================
         // a comment
         // =================
+        // format the created at date for comment to month day, year
+        let commentDate = new Date(comment.createdAt.seconds * 1000);
+        let commentDateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        commentDate = commentDate.toLocaleDateString('en-US', commentDateOptions);
         let jsxComment = (
           <div>
-            <p>{comment.creator}</p>
+            <p>{comment.creator} <span className={classes['comment--ml']}>{ commentDate }</span> </p>
             <div>
               { renderHTML(comment.comment) }
             </div>
@@ -407,6 +415,11 @@ class DisplayBuild extends Component {
     }
     
     if (build) {
+      // format the date into month day year
+      let date = new Date(build.createdAt.seconds * 1000);
+      let dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+      date = date.toLocaleDateString('en-US', dateOptions);
+
       // image for the main champion the build 
       let championIcon = require(`../../assets/champion-icons/${build.champion}.png`);
       return (
@@ -420,23 +433,25 @@ class DisplayBuild extends Component {
           <div className={classes['build__intro']}>
             <img src={championIcon} alt={build.champion} />
             {
-              this.state.userLikedBuild ?
-              <p onClick={this.handleUpvote} className={[classes['button'], classes['button--pink'], classes['button--large'], classes['button--margin-left']].join(' ')}>Like</p> :
-              <p onClick={this.handleRemoveUpvote}>click here to unlike it</p>
+              auth.uid ?
+              (this.state.userLikedBuild ?
+              <p onClick={this.handleUpvote} className={[classes['button'], classes['button--pink'], classes['button--large']].join(' ')}>Like</p> :
+              <p onClick={this.handleRemoveUpvote} className={[classes['button'], classes['button--pink'], classes['button--large']].join(' ')}>unlike</p>)
+              : null
             }
           </div>
           {/* ================ */}
           {/* build title      */}
           {/* ================ */}
           <div className={classes['build__title']}>
-            <h2 className={classes['build__info-title']}>{build.champion} <span className={classes['font--normal']}>created by {build.creator}</span></h2>
-            <p className={classes['build__main-title']}>{build.title}</p>
+            <p className={classes['build__info-title']}>created by {build.creator} <span className={classes['build__info--ml']}>{build.upvotes} likes</span> <span className={classes['build__info--ml']}>{date}</span></p>
+            <h2 className={classes['build__main-title']}>{build.champion} <span className={classes['build__main-title--margin']}>{build.title}</span></h2>
           </div>
           {/* ================ */}
           {/* build build      */}
           {/* ================ */}
           <div className={classes['build__build']}>
-            <p className={classes['build__category-title']}>Build: </p>
+            <p className={classes['build__category-title']}>Build</p>
             {build.items.map((item, index) => {
               let itemIcon = require(`../../assets/item-icons/${item}.png`);
               return <img src={itemIcon} alt={item} key={item + index} className={classes['image']} />
@@ -446,7 +461,7 @@ class DisplayBuild extends Component {
           {/* build team       */}
           {/* ================ */}
           <div className={classes['build__team']}>
-            <p className={classes['build__category-title']}>Comp: </p>
+            <p className={classes['build__category-title']}>Comp</p>
             {build.comp.map((champion, index) => {
               // images for champions that work well with the main champion
               let championIcon = require(`../../assets/champion-icons/${champion}.png`);
@@ -456,8 +471,8 @@ class DisplayBuild extends Component {
           {/* ===================== */}
           {/* rendered build output */}
           {/* ===================== */}
-          <div>
-            <p className={classes['build__category-title']}>Guide: </p>
+          <div className={classes['build__guide']}>
+            <p className={classes['build__category-title']}>Guide</p>
             { renderHTML(build.content) }
           </div>
           {/* ========================== */}
