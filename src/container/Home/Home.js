@@ -7,7 +7,7 @@ import { compose } from 'redux';
 
 import BuildList from '../../component/BuildList/BuildList';
 import SortOptions from './SortOptions';
-import classes from './SortOptions.module.css'
+import classes from './SortOptions.module.css';
 
 /**
  * display all the builds
