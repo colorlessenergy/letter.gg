@@ -313,21 +313,25 @@ class DisplayBuild extends Component {
                   { renderHTML(reply.message) }
                 </div>
                 {/* only show the delete reply button if the user signed in is the user that made the reply */}
-                {reply.authorId === auth.uid ? (
-                  <div>
-                    <p
-                      data-replyid={reply.id}
-                      onClick={this.handleDeleteReply}>
-                      delete
-                    </p>
-                    <p
-                      data-replyid={reply.id}
-                      data-commentid={comment.id}
-                      onClick={this.handleShowEditReplyForm}>
-                      edit
-                    </p>
-                  </div>
-                ) : null}
+                <div className={classes['comment-controls']}>
+                  {reply.authorId === auth.uid ? (
+                    <React.Fragment>
+                      <p
+                        className={classes['comment-controls__control']}
+                        data-replyid={reply.id}
+                        data-commentid={comment.id}
+                        onClick={this.handleShowEditReplyForm}>
+                        edit
+                      </p>
+                      <p
+                        className={classes['comment-controls__control']}
+                        data-replyid={reply.id}
+                        onClick={this.handleDeleteReply}>
+                        delete
+                      </p>
+                    </React.Fragment>
+                  ) : null}
+                </div>
               </div>
             )
           });
@@ -339,26 +343,31 @@ class DisplayBuild extends Component {
         // =================
         let jsxComment = (
           <div>
-            <p>
-              {comment.creator}
-            </p>
+            <p>{comment.creator}</p>
             <div>
               { renderHTML(comment.comment) }
             </div>
-            {/* only show the delete comment button if the user signed in is the user that made the comment */}
-            { comment.authorId === auth.uid ? (
-            <div>
-              <p data-commentid={comment.id} onClick={this.handleDeleteComment}>
-                delete
-              </p>
-              <p data-commentid={comment.id} onClick={this.handleShowEditCommentForm}>
-                edit
-              </p>
+            <div className={classes['comment-controls']}>
+              {/* only show reply button if the user is signed in */}
+              {auth.uid ? (<button className={[classes['button'], classes['button--default'], classes['button--pink'], classes['comment-controls__control']].join(' ')} onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
+              {/* only show the delete comment button if the user signed in is the user that made the comment */}
+              { comment.authorId === auth.uid ? (
+                <React.Fragment>
+                  <p
+                    className={classes['comment-controls__control']}
+                    data-commentid={comment.id}
+                    onClick={this.handleShowEditCommentForm}>
+                    edit
+                  </p>
+                  <p
+                    className={classes['comment-controls__control']}
+                    data-commentid={comment.id}
+                    onClick={this.handleDeleteComment}>
+                    delete
+                  </p>
+                </React.Fragment>
+              ) : null }
             </div>
-            ) : null }
-            
-            {/* only show reply button if the user is signed in */}
-            { auth.uid ? (<button onClick={this.handleShowReplyForm} data-commentid={comment.id}>reply</button>) : null }
             {/* 
             i have to add an 'a' to the id because sometimes the id that firebase assigns has a number in the front
             and that isn't a valid css selector
@@ -379,7 +388,7 @@ class DisplayBuild extends Component {
                 />
               </div>
               <div>
-                <button>submit</button>
+                <button className={[classes['button'], classes['button--default'], classes['button--pink'], classes['button--margin-top']].join(' ')}>Submit</button>
               </div>
             </form>
             {/* display replies here! */}
@@ -401,55 +410,81 @@ class DisplayBuild extends Component {
       // image for the main champion the build 
       let championIcon = require(`../../assets/champion-icons/${build.champion}.png`);
       return (
-        <section key={build.champion}>
-          {
-            this.state.userLikedBuild ?
-            <p onClick={this.handleUpvote}>click here if you liked it</p> :
-            <p onClick={this.handleRemoveUpvote}>click here to unlike it</p>
-          }
-          <h2>[{build.champion}] - {build.title}</h2>
-          <p>created by: { build.creator }</p>
-          <img src={championIcon} alt={build.champion} />
-          {build.items.map((item) => {
-            let itemIcon = require(`../../assets/item-icons/${item}.png`);
-            return <img src={itemIcon} alt={item} key={item} />
-          })}
-
-          {build.comp.map((champion) => {
-            // images for champions that work well with the main champion
-            let championIcon = require(`../../assets/champion-icons/${champion}.png`);
-            return <img src={championIcon} alt={champion} key={champion} />
-          })}
+        // ================
+        // build
+        // ================
+        <section key={build.champion} className={classes.build}>
+          {/* ================ */}
+          {/* build intro      */}
+          {/* ================ */}
+          <div className={classes['build__intro']}>
+            <img src={championIcon} alt={build.champion} />
+            {
+              this.state.userLikedBuild ?
+              <p onClick={this.handleUpvote} className={[classes['button'], classes['button--pink'], classes['button--large'], classes['button--margin-left']].join(' ')}>Like</p> :
+              <p onClick={this.handleRemoveUpvote}>click here to unlike it</p>
+            }
+          </div>
+          {/* ================ */}
+          {/* build title      */}
+          {/* ================ */}
+          <div className={classes['build__title']}>
+            <h2 className={classes['build__info-title']}>{build.champion} <span className={classes['font--normal']}>created by {build.creator}</span></h2>
+            <p className={classes['build__main-title']}>{build.title}</p>
+          </div>
+          {/* ================ */}
+          {/* build build      */}
+          {/* ================ */}
+          <div className={classes['build__build']}>
+            <p className={classes['build__category-title']}>Build: </p>
+            {build.items.map((item, index) => {
+              let itemIcon = require(`../../assets/item-icons/${item}.png`);
+              return <img src={itemIcon} alt={item} key={item + index} className={classes['image']} />
+            })}
+          </div>
+          {/* ================ */}
+          {/* build team       */}
+          {/* ================ */}
+          <div className={classes['build__team']}>
+            <p className={classes['build__category-title']}>Comp: </p>
+            {build.comp.map((champion, index) => {
+              // images for champions that work well with the main champion
+              let championIcon = require(`../../assets/champion-icons/${champion}.png`);
+              return <img src={championIcon} alt={champion} key={champion + index} className={classes['image']} />
+            })}
+          </div>
+          {/* ===================== */}
+          {/* rendered build output */}
+          {/* ===================== */}
           <div>
+            <p className={classes['build__category-title']}>Guide: </p>
             { renderHTML(build.content) }
           </div>
           {/* ========================== */}
           {/* a form to create a comment */}
           {/* ========================== */}
-          {this.props.auth.uid ? (
-          <form onSubmit={this.handleCreateComment}>
-            <div>
-              <label htmlFor='comment'></label>
-              <ReactQuill
-                id='comment'
-                modules={this.modules}
-                formats={this.formats}
-                value={this.state.comment}
-                onChange={this.onQuillCommentChange}
-                placeholder='Create a comment'
-              />
-            </div>
-            <div>
-              <button>
-                comment
-            </button>
-            </div>
-          </form>
+          { this.props.auth.uid ? (
+            <form onSubmit={this.handleCreateComment}>
+              <div>
+                <label htmlFor='comment'></label>
+                <ReactQuill
+                  id='comment'
+                  modules={this.modules}
+                  formats={this.formats}
+                  value={this.state.comment}
+                  onChange={this.onQuillCommentChange}
+                  placeholder='Create a comment'
+                />
+              </div>
+              <div className={classes['button--container']}>
+                <button className={[classes['button'], classes['button--default'], classes['button--pink'], classes['button--large'], classes['button--margin-top']].join(' ')}>comment</button>
+              </div>
+            </form>
           ) : (
-            <div>
+            <div className={classes['build__login-prompt']}>
               want to comment?
-              <Link to='/login'>login</Link>
-              <Link to='/register'>register</Link>
+              <Link to='/login' className={[classes['button'], classes['button--border'], classes['button--margin']].join(' ')}>login</Link>
+              <Link to='/register' className={[classes['button'], classes['button--pink'], classes['button--margin']].join(' ')}>register</Link>
             </div>
           ) }
           { displayComments }

@@ -9,3 +9,94 @@
 .replies {
   margin-left: 30px;
 }
+
+.build {
+  margin: 10px;
+}
+
+.build__intro {
+  display: flex;
+  align-items: center;
+}
+
+.font--normal {
+  font-weight: normal;
+  font-size: 1em;
+}
+
+.build__category-title,
+.build__main-title {
+  text-decoration: underline;
+}
+
+.image {
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.build__login-prompt {
+  border: 1px solid #000;
+  border-radius: 7px;
+  padding: 15px 10px;
+}
+
+.button--container {
+  text-align: right;
+}
+
+.button {
+  padding: 10px;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+}
+
+.button--default {
+  background: none;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.button--clear {
+  color: #FE7BB4;
+  padding: 0;
+}
+
+.button--pink {
+  background-color: #FE7BB4;
+  color: #fff;
+}
+
+.button--border {
+  border: 1px solid black;
+}
+
+.button--large {
+  padding: 20px 40px;
+  margin: 0;
+}
+
+.button--margin {
+  margin-left: 10px;
+}
+
+.button--margin-left {
+  margin-left: 50px;
+}
+
+.button--margin-top {
+  margin-top: 10px;
+}
+
+.comment-controls {
+  display: flex;
+  align-items: center;
+  color: #FE7BB4;
+}
+
+.comment-controls__control {
+  margin: 0;
+  margin-right: 10px;
+  cursor: pointer;
+}
