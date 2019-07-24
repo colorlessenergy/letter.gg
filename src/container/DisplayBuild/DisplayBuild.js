@@ -345,8 +345,7 @@ class DisplayBuild extends Component {
         // =================
         // a comment
         // =================
-        console.log(comment, build)
-          // format the created at date for comment to month day, year
+        // format the created at date for comment to month day, year
         let commentDate = new Date(comment.createdAt.seconds * 1000);
         let commentDateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         commentDate = commentDate.toLocaleDateString('en-US', commentDateOptions);
