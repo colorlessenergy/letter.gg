@@ -148,4 +148,8 @@
   .build__category-title {
     font-size: 18px;
   }
+
+  .button--large {
+    padding: 32px 100px;
+  }
 }
