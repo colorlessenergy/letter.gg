@@ -7,6 +7,7 @@ import { compose } from 'redux';
 
 import BuildList from '../../component/BuildList/BuildList';
 import SortOptions from './SortOptions';
+import classes from './SortOptions.module.css'
 
 /**
  * display all the builds
@@ -56,12 +57,12 @@ class Home extends Component {
     return (
       <React.Fragment>
         <div>
-          <label htmlFor="champion">
-            champion
-          </label>
+          <label htmlFor="champion"></label>
           <input type="text"
             onChange={this.handleChange}
             id="champion"
+            placeholder="search for a champion"
+            className={classes["filter"]}
             value={this.state.champion} />
         </div>
 
