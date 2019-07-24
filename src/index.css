@@ -27,3 +27,8 @@ code {
   max-width: 1360px;
   margin: 0 auto;
 }
+
+.ql-container,
+.ql-editor {
+  min-height: 100px;
+}

@@ -19,9 +19,9 @@ const NavBar = (props) => {
     </React.Fragment>
   ) : (
     <React.Fragment>
-      <Link to='/register' className={classes['nav__link']}>Register</Link>
-      <Link to='/' className={classes['nav__link']}>Letter.gg</Link>
       <Link to='/login' className={classes['nav__link']}>Login</Link>
+      <Link to='/' className={classes['nav__link']}>Letter.gg</Link>
+      <Link to='/register' className={classes['nav__link']}>Register</Link>
     </React.Fragment>
   );
 
