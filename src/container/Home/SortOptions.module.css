@@ -15,3 +15,22 @@
 .active {
   color: #FE7BB4;
 }
+
+.filter {
+  background-color: #E4DBE3;
+  
+  border: none;
+  display: block;
+  height: 32px;
+  width: 80%;
+  margin: 0 auto 32px auto;
+  font-size: 16px;
+  outline: none;
+  padding-left: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .filter {
+    height: 40px;
+  }
+}

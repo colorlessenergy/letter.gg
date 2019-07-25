@@ -20,6 +20,7 @@
 @media only screen and (min-width: 499px) {
   .nav {
     width: 80%;
+    padding: 0;
     margin: 0 auto;
   }
 }
