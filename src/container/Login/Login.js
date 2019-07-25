@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loginAction } from '../../store/actions/authActions';
-import { Redirect } from 'react-router-dom'
-
+import { Redirect, Link } from 'react-router-dom'
+import classes from './Login.module.css';
 
 class Login extends Component {
   state = {
@@ -30,33 +30,46 @@ class Login extends Component {
       return <Redirect to='/' />
     }
     return (
-      <form onSubmit={this.handleSubmit}>
-        <div>
-          <label
-            htmlFor='email'>Email: </label>
-          <input
-            type='email'
-            id='email'
-            onChange={this.handleChange}
-            value={this.state.email} />
-        </div>
+      <div className={classes['form-container']}>
+        <form onSubmit={this.handleSubmit} className={classes['form']}>
+          <h1 className={classes['form__heading']}>Login to your account now</h1>
+          <div className={classes['form__group']}>
+            <label
+              htmlFor='email'
+              className={classes['form__label']}>Email </label>
+            <input
+              type='email'
+              id='email'
+              className={classes['form__input']}
+              placeholder='Email'
+              onChange={this.handleChange}
+              value={this.state.email} />
+          </div>
 
-        <div>
-          <label
-            htmlFor='password'>Password: </label>
-          <input
-            type='password'
-            id='password'
-            onChange={this.handleChange}
-            value={this.state.password} />
-        </div>
+          <div className={classes['form__group']}>
+            <label
+              htmlFor='password'
+              className={classes['form__label']}>Password </label>
+            <input
+              id='password'
+              type='password'
+              className={classes['form__input']}
+              placeholder='Password'
+              onChange={this.handleChange}
+              value={this.state.password} />
+          </div>
 
-        <div>
-          <button>Login</button>
-          { authError ? <p> { authError } </p> : null }
+          <div>
+            {authError ? <p className={classes['error-message']}> {authError} </p> : null}
+            <button
+              className={[classes['button'], classes['button--default'], classes['button--pink'], classes['button--large']].join(' ')}>Login</button>
+          </div>
+        </form>
 
+        <div className={classes['register-prompt']}>
+          <p>Don't have an account? <Link to='/register' className={classes['register-prompt__link']}>Register</Link></p>
         </div>
-      </form>
+      </div>
     )
   }
 }

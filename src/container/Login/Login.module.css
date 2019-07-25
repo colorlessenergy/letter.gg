@@ -1,0 +1,94 @@
+.form-container {
+  margin: 80px auto 0 auto;
+}
+
+.form {
+  background-color: #F5F5F5;
+  border-radius: 5px;
+  margin: 0 auto 60px auto;
+  padding-top: 35px;
+  padding-bottom: 80px;
+  width: 340px;
+  height: 465px;
+}
+
+.form__heading {
+  font-size: 1.125em;
+  margin-bottom: 45px;
+  text-align: center;
+}
+
+.form__group {
+  margin-bottom: 33px;
+  margin-left: 35px;
+}
+
+.form__label,
+.form__input {
+  display: block;
+}
+.form__label {
+  color: #9F9F9F;
+  font-size: 1em;
+  margin-bottom: 15px;
+}
+
+.form__input {
+  background: none;
+  background-color: #E4DBE3;
+  border: none;
+  padding: 10px;
+  width: 275px;
+  height: 45px;
+}
+
+.error-message {
+  color: #ff0000;
+  text-align: center;
+}
+
+.button {
+  color: #000;
+  cursor: pointer;
+  font-size: 1em;
+  margin-left: 35px;
+  text-decoration: none;
+}
+
+.button--default {
+  background: none;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.button--pink {
+  background-color: #FE7BB4;
+  color: #fff;
+}
+
+.button--large {
+  width: 275px;
+  height: 55px;
+}
+
+.register-prompt {
+  border: 1px solid #BABABA;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 180px auto;
+  width: 340px;
+  height: 105px;
+}
+
+.register-prompt__link {
+  margin-left: 15px;
+}
+
+@media only screen and (min-width: 960px) {
+  .form-container {
+    width: 80%;
+  }
+}
