@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateUserUsernameAction } from '../../../../store/actions/authActions';
 
-
+import classes from './UserSettingsForm.module.css';
 
 class UpdateUserEmail extends Component {
   state = {
@@ -36,19 +36,25 @@ class UpdateUserEmail extends Component {
       return <Redirect to='/login' />
     }
     return (
-      <div>
-        <h2>
+      <div className={classes['form-container']}>
+        <h2 className={classes['form__title']}>
           update username
         </h2>
+        <p className={classes['form__description']}>
+          Update to a new username
+        </p>
+
         <form onSubmit={this.handleSubmit}>
-          <div>
-            <label htmlFor="username">Username: </label>
+          <div className={classes['form__group']}>
+            <label className={classes['form__label']} htmlFor="username">Username: </label>
             <input type="text"
               id="username"
+              className={classes['form__input']}
+              placeholder='update username'
               onChange={this.handleChange}
               value={this.state.username} />
           </div>
-          <button>
+          <button className={classes['button']}>
             update
           </button>
 
