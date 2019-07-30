@@ -294,6 +294,13 @@ class DisplayBuild extends Component {
 
     if (comments) {
       displayComments = comments.map((comment) => {
+
+        // don't show the comment if it wasn't created
+        // in this build
+        if (comment.buildId !== this.props.match.params.id) {
+          return false;
+        }
+
         // all the replies are fetched
         // filter all the replies that are for the current comment
         // map through the array and make JSX elements to display
@@ -407,12 +414,12 @@ class DisplayBuild extends Component {
          jsxComment 
         );
       });
-    }
-    else {
+    } else {
       displayComments = (
-        <p>no comments</p>
+        <p>comments loading or no comments...</p>
       );
     }
+
     
     if (build) {
       // format the date into month day year
@@ -479,7 +486,7 @@ class DisplayBuild extends Component {
           {/* a form to create a comment */}
           {/* ========================== */}
           { this.props.auth.uid ? (
-            <form onSubmit={this.handleCreateComment}>
+            <form className={classes['margin__bottom']} onSubmit={this.handleCreateComment}>
               <div>
                 <label htmlFor='comment'></label>
                 <ReactQuill
