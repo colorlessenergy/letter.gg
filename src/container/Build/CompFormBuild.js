@@ -90,8 +90,7 @@ class CompFormBuild extends Component {
 
     this.setState({
       pickedChampions: arr,
-      currentDataNeededFilled: formValidationString,
-      champion: ''
+      currentDataNeededFilled: formValidationString
     }, () => {
       this.props.handleChange({
         comp: this.state.pickedChampions
