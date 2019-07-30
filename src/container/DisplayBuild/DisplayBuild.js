@@ -414,6 +414,10 @@ class DisplayBuild extends Component {
          jsxComment 
         );
       });
+    } else {
+      displayComments = (
+        <p>comments loading or no comments...</p>
+      );
     }
 
     
