@@ -11,6 +11,8 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 
+import classes from './Build.module.css';
+
 /**
  * this is the form to create a build
  * 
@@ -61,23 +63,32 @@ class Build extends Component {
 
 
     return (
-      <form onSubmit={this.handleSubmit}>
-        <h2>pick a title</h2>
+      <form className={classes['form']} onSubmit={this.handleSubmit}>
+        <h2 className={classes['form__title']}>create a title for your build</h2>
         <TitleFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false } handleChange={this.handleChange} />
-        <h2>pick your champion</h2>
+        
+        <h2 className={classes['form__title']}>pick the main champion</h2>
+        <p className={classes['form__description']}>The champion the build will be based on</p>
         <ChampionFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false } handleChange={this.handleChange} />
-        <h2>pick the best items for this champion</h2>
+        
+        <h2 className={classes['form__title']}>choose the best items</h2>
+        <p className={classes['form__description']}>click on selected items to remove them</p>
         <ItemFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false } handleChange={this.handleChange} />
-        <h2>pick champions that work best with this champion</h2>
+        
+        <h2 className={classes['form__title']}>champion comp</h2>
+        <p className={classes['form__description']}>click on selected champions to remove them</p>
         <CompFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false } handleChange={this.handleChange} />
-        <h2>write about why this is the best way to use this champion in team fight tactics</h2>
+        
+        <h2 className={classes['form__title']}>write about the strategy</h2>
         <ContentFormBuild missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false } handleChange={this.handleChange} />
         <div>
-          <button>
+          <button className={classes['button']}>
             create
           </button>
 
-          {this.state.currentDataNeededFilled ? <p>{this.state.currentDataNeededFilled}</p> : null}
+          {this.state.currentDataNeededFilled ? 
+          <p className={[classes['error'], classes['error--ml']].join(' ')}>{this.state.currentDataNeededFilled}</p> : 
+          null}
         </div>
       </form>
     );

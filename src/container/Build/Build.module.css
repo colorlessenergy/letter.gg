@@ -1,0 +1,108 @@
+.form__group {
+  margin-bottom: 33px;
+  margin-left: 35px;
+}
+
+.form__group {
+  margin-bottom: 40px;
+  margin-left: 25px;
+}
+
+.form__title {
+  margin: 16px 25px;
+}
+
+.form__description {
+  color: #9F9F9F;
+  margin: 8px 25px 10px 25px;
+  font-size: 14px;
+
+}
+
+.form__label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  
+  color: #9F9F9F;
+}
+
+.form__label,
+.form__input {
+  display: block;
+}
+
+.form__input {
+  background: none;
+  background-color: #E4DBE3;
+  border: none;
+  padding: 10px;
+  width: 275px;
+  height: 45px;
+
+  color:#000;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.form__content {
+  margin: 0 10px;
+}
+
+.button {
+  display: block;
+  background-color: #FE7BB4;
+  border: none;
+  margin: 30px auto;
+  outline: none;
+  width: 80%;
+  padding: 20px 0;
+
+  color: #fff;
+  font-size: 18px;
+}
+
+.images {
+  width: 266px;
+  max-height: 200px;
+  margin-top: 18px;
+  
+  display: flex;
+  flex-wrap: wrap;
+  overflow: scroll;
+}
+
+.images__image {
+  height: 64px;
+  width: 64px; 
+}
+
+.images__picked {
+  margin-top: 10px;
+}
+
+.error {
+  margin-top: 10px;
+  margin-bottom: 15px;
+
+  color: #EB5757;
+  font-weight: 600;
+}
+
+.error--ml {
+  margin-left: 25px;
+}
+
+@media screen and  (min-width: 768px) {
+  .form {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .form__input {
+    width: 100%;
+  }
+
+  .images {
+    width: 100%;
+  }
+}

@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 
+import classes from './Build.module.css';
+
+
 class ItemsFormBuild extends Component {
   state = {
     pickedItems: [],
@@ -112,7 +115,7 @@ class ItemsFormBuild extends Component {
           // <p onClick={this.handleItemClick} id={item.lookUp} key={item.display}>
           //   { item.display }
           // </p>
-          <img onClick={this.handleItemClick} id={item.lookUp} key={item.display} src={itemIcon} alt={item.display} />
+          <img className={classes['images__image']} onClick={this.handleItemClick} id={item.lookUp} key={item.display} src={itemIcon} alt={item.display} />
         );
       })
     } else {
@@ -125,7 +128,7 @@ class ItemsFormBuild extends Component {
       itemIcons = this.state.pickedItems.map((item, index) => {
         const itemIcon = require(`../../assets/item-icons/${item}.png`);
         return (
-          <img onClick={this.handleRemoveItem} key={index} id={index} src={itemIcon} alt={item} />
+          <img className={classes['images__picked']} onClick={this.handleRemoveItem} key={index} id={index} src={itemIcon} alt={item} />
         );
       })
     } else {
@@ -134,20 +137,22 @@ class ItemsFormBuild extends Component {
 
     return (
       <React.Fragment>
-        { itemIcons }
-        <div>
-          <label htmlFor='item'>item</label>
+        <div className={classes['form__group']}>
+          <label className={classes['form__label']} htmlFor='item'>item</label>
           <input
             id='item'
             type='text'
+            className={classes['form__input']}
+            placeholder='Item Name'
             onChange={this.handleChange}
             value={this.state.item} />
+            { itemIcons }
           {/*
             regular error handling when user is typing
           */}
           {
             this.state.currentDataNeededFilled ?
-              <p>{this.state.currentDataNeededFilled}</p> :
+              <p className={classes['error']}>{this.state.currentDataNeededFilled}</p> :
               null
           }
           {/*
@@ -156,12 +161,12 @@ class ItemsFormBuild extends Component {
           */}
           {
             !this.state.currentDataNeededFilled && this.props.missingInfo ?
-              <p>at most 3 items are needed</p> :
+              <p className={classes['error']}>at most 3 items are needed</p> :
               null
           }
-        </div>
-        <div>
-          { items }
+          <section className={classes['images']}>
+            { items }
+          </section>
         </div>
       </React.Fragment>
     );

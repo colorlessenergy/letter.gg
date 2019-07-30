@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import classes from './Build.module.css';
+
+
 class CompFormBuild extends Component {
   state = {
     pickedChampions: [],
@@ -21,6 +24,7 @@ class CompFormBuild extends Component {
       };
     }
   }
+
 
 
   // display all the champions initially
@@ -106,7 +110,7 @@ class CompFormBuild extends Component {
           // <p onClick={this.handleItemClick} id={champion.lookUp} key={champion.display}>
           //   { champion.display }
           // </p>
-          <img onClick={this.handleItemClick} id={champion.lookUp} key={champion.display} src={championIcon} alt={champion.display} />
+          <img className={classes['images__image']} onClick={this.handleItemClick} id={champion.lookUp} key={champion.display} src={championIcon} alt={champion.display} />
         );
       });
     } else {
@@ -119,7 +123,7 @@ class CompFormBuild extends Component {
       pickedChampions = this.state.pickedChampions.map((champion, index) => {
         const championIcon = require(`../../assets/champion-icons/${champion}.png`);
         return (
-          <img onClick={this.handleRemoveItem} key={index} id={index} src={championIcon} alt={champion} />
+          <img className={[classes['images__picked'], classes['images__image']].join(' ')} onClick={this.handleRemoveItem} key={index} id={index} src={championIcon} alt={champion} />
         );
       });
     } else {
@@ -128,20 +132,23 @@ class CompFormBuild extends Component {
 
     return (
       <React.Fragment>
-        {pickedChampions}
-        <div>
-          <label htmlFor='champion'>Champion</label>
+        <div className={classes['form__group']}>
+          <label className={classes['form__label']} htmlFor='champion'>Champion</label>
           <input
             id='champion'
             type='text'
+            placeholder='champion name'
+            className={classes['form__input']}
             onChange={this.handleChange}
             value={this.state.champion} />
+            {pickedChampions}
+            
           {/*
             regular error handling when user is typing
           */}
           {
             this.state.currentDataNeededFilled ?
-              <p>{this.state.currentDataNeededFilled}</p> :
+              <p className={classes['error']}>{this.state.currentDataNeededFilled}</p> :
               null
           }
           {/*
@@ -150,12 +157,12 @@ class CompFormBuild extends Component {
           */}
           {
             !this.state.currentDataNeededFilled && this.props.missingInfo ?
-              <p>a single champion is needed!</p> :
+              <p className={classes['error']}>a single champion is needed!</p> :
               null
           }
-        </div>
-        <div>
-          {displayedChampions}
+          <div className={classes['images']}>
+            {displayedChampions}
+          </div>
         </div>
       </React.Fragment>
 

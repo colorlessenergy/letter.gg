@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 
+import classes from './Build.module.css';
+
+
 class ChampionFormBuild extends Component {
   state = {
     champion: '',
@@ -94,7 +97,7 @@ class ChampionFormBuild extends Component {
           // <p id={champion.lookUp} onClick={this.handleChampionClick} key={champion.lookUp}>
           //   {champion.display}
           // </p>
-          <img id={champion.lookUp} onClick={this.handleChampionClick} key={champion.lookUp} src={championIcon} alt={champion.display} />
+          <img className={classes['images__image']} id={champion.lookUp} onClick={this.handleChampionClick} key={champion.lookUp} src={championIcon} alt={champion.display} />
         );
       });
     } else {
@@ -103,33 +106,43 @@ class ChampionFormBuild extends Component {
     
     return (
       <React.Fragment>
-        {this.state.imageURL ? <img src={this.state.imageURL} alt={this.state.champion} /> : null }
-        <div>
-          <label htmlFor='champion'>Champion: </label>
+        <div className={classes['form__group']}>
+          <label className={classes['form__label']} htmlFor='champion'>Champion Name </label>
           <input
             id='champion'
             type='text'
+            className={classes['form__input']}
+            placeholder='champion name'
             onChange={this.handleChange}
             value={this.state.champion} />
-        </div>
-        {/*
+
+          {this.state.imageURL ? 
+            <img className={classes['images__picked']} src={this.state.imageURL} alt={this.state.champion} /> : 
+            null}
+          {/*
             regular error handling when user is typing
         */}
-        {
-          this.state.currentDataNeededFilled ? 
-          <p>{this.state.currentDataNeededFilled }</p> : 
-          null 
-        }
-        {/*
+          {
+            this.state.currentDataNeededFilled ?
+              <p className={classes['error']}>{this.state.currentDataNeededFilled}</p> :
+              null
+          }
+          {/*
             when the user presses submit and doesn't type anything in the input
             display an error
         */}
-        {
-          !this.state.currentDataNeededFilled && this.props.missingInfo ?
-            <p>a champion is needed!</p> :
-            null
-        }
-        {filterChampions}
+          {
+            !this.state.currentDataNeededFilled && this.props.missingInfo ?
+              <p className={classes['error']}>a champion is needed!</p> :
+              null
+          }
+
+          <section className={classes['images']}>
+            {filterChampions}
+          </section>
+        </div>
+
+        
       </React.Fragment>
     )
   }
