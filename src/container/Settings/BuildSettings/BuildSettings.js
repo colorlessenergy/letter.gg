@@ -6,6 +6,8 @@ import { compose } from 'redux';
 
 import BuildList from '../../../component/BuildList/BuildList';
 
+import classes from './BuildSettings.module.css';
+
 /**
  * display builds and will link each build to a page to edit it
  * 
@@ -19,13 +21,17 @@ class BuildSettings extends Component {
       }) : [];
 
     return (
-      <BuildList url='/editbuild/' builds={buildsArray} />
+      <React.Fragment>
+        <h2 className={classes['title']}>
+          edit a build
+        </h2>
+        <BuildList url='/editbuild/' builds={buildsArray} />
+      </React.Fragment>
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     auth: state.firebase.auth,
     builds: state.firestore.ordered.builds

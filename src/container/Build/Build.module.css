@@ -68,7 +68,7 @@
   
   display: flex;
   flex-wrap: wrap;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .images__image {
@@ -117,6 +117,4 @@
   .images, .images__picked--container  {
     width: 100%;
   }
-
-  
 }
