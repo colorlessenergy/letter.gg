@@ -6,6 +6,8 @@ import { Redirect } from 'react-router-dom'
 
 import { DeleteUserAction } from '../../../../store/actions/authActions';
 
+import classes from './UserSettingsForm.module.css';
+
 class DeleteUserAccount extends Component {
   componentDidMount() {
     if (!this.props.reauthenticateSuccess) {
@@ -29,16 +31,18 @@ class DeleteUserAccount extends Component {
     }
 
     return (
-      <div>
-        <h1>
+      <div className={classes['form-container']}>
+        <h2 className={classes['form__title']}>
           Delete your account
-        </h1>
-        <p>
+        </h2>
+        <p className={classes['form__description']}>
           by pressing the button delete your account you be deleted and you will not be able to recover it!
         </p>
 
-        <p onClick={this.deleteAccount}>
-          click here to delete your account         
+        <p 
+          className={classes['warning']} 
+          onClick={this.deleteAccount}>
+          click here to delete your account!
         </p>
 
         { this.props.authError ? <p>{ this.props.authError }</p> : null }

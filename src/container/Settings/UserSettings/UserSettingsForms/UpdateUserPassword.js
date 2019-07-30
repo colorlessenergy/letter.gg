@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateUserPasswordAction } from '../../../../store/actions/authActions';
 
+import classes from './UserSettingsForm.module.css';
 
 
 class UpdateUserEmail extends Component {
@@ -30,8 +31,6 @@ class UpdateUserEmail extends Component {
   }
 
   render() {
-
-    console.log(this.props)
     if (this.props.userUpdated) {
       this.props.history.goBack();
       return (<p> redirecting.. </p>);
@@ -42,19 +41,26 @@ class UpdateUserEmail extends Component {
       return <Redirect to='/login' />
     }
     return (
-      <div>
-        <h2>
+      <div className={classes['form-container']}>
+        <h2 className={classes['form__title']}>
           update password
         </h2>
+        <p className={classes['form__description']}>
+          Update to a new password
+        </p>
+
         <form onSubmit={this.handleSubmit}>
-          <div>
-            <label htmlFor="password">Password: </label>
-            <input type="password"
+          <div className={classes['form__group']}>
+            <label className={classes['form__label']} htmlFor="password">Password: </label>
+            <input 
+              type="password"
               id="password"
+              placeholder='update password'
+              className={classes['form__input']}
               onChange={this.handleChange}
               value={this.state.password} />
           </div>
-          <button>
+          <button className={classes['button']}>
             update
           </button>
 
@@ -67,7 +73,6 @@ class UpdateUserEmail extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     auth: state.firebase.auth,
     authError: state.auth.authError,

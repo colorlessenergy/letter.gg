@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { updateUserEmailAction } from '../../../../store/actions/authActions';
 
+import classes from './UserSettingsForm.module.css';
 
 
 class UpdateUserEmail extends Component {
@@ -40,21 +41,32 @@ class UpdateUserEmail extends Component {
       return <Redirect to='/login' />
     }
     return (
-      <div>
-        <h2>
+      <div className={classes['form-container']}>
+        <h2 className={classes['form__title']}>
           update email
         </h2>
+        <p className={classes['form__description']}>
+          Update to a new email address
+        </p>
+
         <form onSubmit={this.handleSubmit}>
-          <div>
-            <label htmlFor="email">Email: </label>
+          <div className={classes['form__group']}>
+            <label 
+              className={classes['form__label']}
+              htmlFor="email">
+                Email 
+            </label>
             <input type="email"
               id="email"
+              placeholder='update email'
+              className={classes['form__input']}
               onChange={this.handleChange}
               value={this.state.email} />
           </div>
-          <button>
+          <button className={classes['button']}>
             update
         </button>
+        
           {this.props.authError ? <p>{this.props.authError}</p> : null}
 
           {this.props.userUpdated ? <p> updated email successfully </p> : null}
@@ -65,7 +77,6 @@ class UpdateUserEmail extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     auth: state.firebase.auth,
     authError: state.auth.authError,
