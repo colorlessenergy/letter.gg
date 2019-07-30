@@ -67,7 +67,8 @@ class CompFormBuild extends Component {
     
     this.setState({
       pickedChampions: arr,
-      currentDataNeededFilled: formValidationString
+      currentDataNeededFilled: formValidationString,
+      champion: ''
     }, () => {
       this.props.handleChange({
         comp: this.state.pickedChampions
@@ -97,22 +98,22 @@ class CompFormBuild extends Component {
     });
   }
 
+  displayChampion = (champion) => {
+    const championIcon = require(`../../assets/champion-icons/${champion.lookUp}.png`);
+
+
+    return (
+      <img className={classes['images__image']} onClick={this.handleItemClick} id={champion.lookUp} key={champion.display} src={championIcon} alt={champion.display} />
+    );
+  }
+
   render() {
     let displayedChampions = null;
 
-    if (this.state.filteredChampions.length) {
-      displayedChampions = this.state.filteredChampions.map((champion) => {
-        const championIcon = require(`../../assets/champion-icons/${champion.lookUp}.png`);
-
-        // unsure to display the champion icon or have the name of the champion
-
-        return (
-          // <p onClick={this.handleItemClick} id={champion.lookUp} key={champion.display}>
-          //   { champion.display }
-          // </p>
-          <img className={classes['images__image']} onClick={this.handleItemClick} id={champion.lookUp} key={champion.display} src={championIcon} alt={champion.display} />
-        );
-      });
+    if (this.state.champion === '') {
+      displayedChampions = this.state.champions.map(this.displayChampion);
+    } else if (this.state.filteredChampions.length) {
+      displayedChampions = this.state.filteredChampions.map(this.displayChampion);
     } else {
       displayedChampions = null;
     }

@@ -68,7 +68,8 @@ class ItemsFormBuild extends Component {
       this.setState({
         pickedItems: arr,
         // dynamically tell the user how many items is needed
-        currentDataNeededFilled: formValidationString
+        currentDataNeededFilled: formValidationString,
+        item: ''
       }, () => {
         this.props.handleChange({
           items: this.state.pickedItems
@@ -103,21 +104,20 @@ class ItemsFormBuild extends Component {
     });
   }
 
+  displaySingleItem = (item) => {
+    const itemIcon = require(`../../assets/item-icons/${item.lookUp}.png`);
+
+    return (
+      <img className={classes['images__image']} onClick={this.handleItemClick} id={item.lookUp} key={item.display} src={itemIcon} alt={item.display} />
+    )
+  }
+
   render () {
     let items = null;
-
-    if (this.state.filteredItems.length) {
-      items = this.state.filteredItems.map((item) => {        
-        const itemIcon = require(`../../assets/item-icons/${item.lookUp}.png`);
-
-        // unsure to display the champion icon or just the text for the champion
-        return (
-          // <p onClick={this.handleItemClick} id={item.lookUp} key={item.display}>
-          //   { item.display }
-          // </p>
-          <img className={classes['images__image']} onClick={this.handleItemClick} id={item.lookUp} key={item.display} src={itemIcon} alt={item.display} />
-        );
-      })
+    if (this.state.item === '') {
+      items = this.state.items.map(this.displaySingleItem);
+    } else if (this.state.filteredItems.length) {
+      items = this.state.filteredItems.map(this.displaySingleItem)
     } else {
       items = null;
     }
