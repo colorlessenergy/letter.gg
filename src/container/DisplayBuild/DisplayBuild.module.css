@@ -68,6 +68,7 @@
   border: 1px solid #000;
   border-radius: 7px;
   padding: 15px 10px;
+  margin-bottom: 30px;
 }
 
 .button--container {
@@ -131,6 +132,10 @@
 .build__team, 
 .build__guide {
   margin-top: 16px;
+}
+
+.margin__bottom {
+  margin-bottom: 10px;
 }
 
 @media screen and (min-width: 768px) {
