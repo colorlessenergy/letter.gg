@@ -6,6 +6,8 @@ import { Redirect, Link } from 'react-router-dom';
 import { resetStateForUpdateUserAction } from '../../../store/actions/authActions';
 
 
+import classes from './UserSettings.module.css'
+
 class UserSettings extends Component {
 
   componentWillMount() {
@@ -20,11 +22,11 @@ class UserSettings extends Component {
       return <Redirect to='/login' />
     }
     return (
-      <div>
-        <Link to='/updateemail'>update email</Link>
-        <Link to='/updatepassword'>update password</Link>
-        <Link to='/updateusername'>update username</Link>
-        <Link to='/deleteuser'>delete user</Link>
+      <div className={classes['link-container']}>
+        <Link className={classes['link']} to='/updateemail'>update email</Link>
+        <Link className={classes['link']} to='/updatepassword'>update password</Link>
+        <Link className={classes['link']} to='/updateusername'>update username</Link>
+        <Link className={classes['warning']} to='/deleteuser'>delete user</Link>
       </div>
     )
   }
