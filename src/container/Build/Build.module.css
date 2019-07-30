@@ -80,6 +80,18 @@
   margin-top: 10px;
 }
 
+.images__picked--container {
+  width: 266px;
+  margin-top: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.images__picked--container .images__picked {
+  margin-top: 0;
+}
+
 .error {
   margin-top: 10px;
   margin-bottom: 15px;
@@ -102,7 +114,9 @@
     width: 100%;
   }
 
-  .images {
+  .images, .images__picked--container  {
     width: 100%;
   }
+
+  
 }

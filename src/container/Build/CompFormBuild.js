@@ -142,7 +142,10 @@ class CompFormBuild extends Component {
             className={classes['form__input']}
             onChange={this.handleChange}
             value={this.state.champion} />
-            {pickedChampions}
+
+            <div className={classes['images__picked--container']}>
+              {pickedChampions}
+            </div>
             
           {/*
             regular error handling when user is typing
