@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import classes from './Build.module.css';
+
 class TitleFormBuild extends Component {
   state = {
     title: '',
@@ -45,11 +47,13 @@ class TitleFormBuild extends Component {
 
   render() {
     return (
-      <div>
-        <label htmlFor='title'>Title: </label>
+      <div className={classes['form__group']}>
+        <label className={classes['form__label']} htmlFor='title'>Title: </label>
         <input
           id='title'
           type='text'
+          className={classes['form__input']}
+          placeholder='title'
           onChange={this.handleChange}
           value={this.state.title} />
         {/*
@@ -57,7 +61,7 @@ class TitleFormBuild extends Component {
         */}
         { 
           this.state.currentDataNeededFilled ? 
-          <p>{ this.state.currentDataNeededFilled }</p> : 
+          <p className={classes['error']}>{ this.state.currentDataNeededFilled }</p> : 
           null 
         }
         {/*
@@ -66,7 +70,7 @@ class TitleFormBuild extends Component {
         */}
         {
           !this.state.currentDataNeededFilled && this.props.missingInfo ?
-            <p>A title is needed</p> :
+            <p className={classes['error']}>A title is needed</p> :
             null
         }
       </div>

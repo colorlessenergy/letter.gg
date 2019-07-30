@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+import classes from './Build.module.css';
+
 class ContentFormBuild extends Component {
   state = {
     dataFilled: false,
@@ -71,12 +73,13 @@ class ContentFormBuild extends Component {
   render () {
     return (
       <div>
-        <label htmlFor='content'>Content: </label>
+        <label htmlFor='content'></label>
         <ReactQuill
           id="content"
           modules={this.modules}
           formats={this.formats}
           value={this.state.content}
+          className={classes['form__content']}
           placeholder='write about why this is the best way to use this champion in team fight tactics'
           onChange={this.onQuillChange} />
         {/*
@@ -84,7 +87,7 @@ class ContentFormBuild extends Component {
         */}
         {
           this.state.currentDataNeededFilled ?
-            <p>{this.state.currentDataNeededFilled}</p> :
+            <p className={classes['error']}>{this.state.currentDataNeededFilled}</p> :
             null
         }
         {/*
@@ -93,7 +96,7 @@ class ContentFormBuild extends Component {
         */}
         {
           !this.state.currentDataNeededFilled && this.props.missingInfo ?
-            <p>you need to write something!</p> :
+            <p className={[classes['error'], classes['error--ml']].join(' ')}>you need to write something!</p> :
             null
         }
       </div>
