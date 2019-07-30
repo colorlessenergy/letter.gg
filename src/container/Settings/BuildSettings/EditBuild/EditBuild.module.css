@@ -1,0 +1,14 @@
+.error {
+  margin-left: 25px;
+  margin-bottom: 30px;
+
+  color: #EB5757;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.title {
+  margin-left: 25px;
+  margin-top: 0;
+}

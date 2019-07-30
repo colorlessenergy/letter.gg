@@ -13,6 +13,12 @@ import { firestoreConnect } from 'react-redux-firebase'
 import { Redirect } from 'react-router-dom';
 
 
+import classes from './EditBuild.module.css';
+
+// reusing form classes used when creating a build
+import formClasses from '../../../Build/Build.module.css';
+
+
 /**
  * this is the form to edit and delete the build
  * 
@@ -94,48 +100,56 @@ class EditBuild extends Component {
     if (!auth.uid) return <Redirect to='/login' />
 
     return (
-      <div>
-        {/* button to delete a build */}
-        <p onClick={this.handleDeleteBuild}>delete this build !</p>
-        
-        <form onSubmit={this.handleSubmit}>
-          <h2>pick a title</h2>
+      <React.Fragment>
+
+        <h2 className={classes['title']}>
+          Editing a build
+        </h2>
+        <form className={formClasses['form']} onSubmit={this.handleSubmit}>
+
+          {/* button to delete a build */}
+          <p className={classes['error']} onClick={this.handleDeleteBuild}>click here to delete your build!</p>
+
+          <h2 className={formClasses['form__title']}>create a title for your build</h2>
           <TitleFormBuild
             missingInfo={this.state.currentDataNeededFilled && !this.state.title ? true : false}
             title={build ? build.title : ''}
             handleChange={this.handleChange} />
 
-          <h2>pick your champion</h2>
+          <h2 className={formClasses['form__title']}>pick the main champion</h2>
+          <p className={formClasses['form__description']}>The champion the build will be based on</p>
           <ChampionFormBuild
             missingInfo={this.state.currentDataNeededFilled && !this.state.champion ? true : false}
             champion={build ? build.champion : ''}
             handleChange={this.handleChange} />
 
-          <h2>pick the best items for this champion</h2>
+          <h2 className={formClasses['form__title']}>choose the best items</h2>
+          <p className={formClasses['form__description']}>click on selected items to remove them</p>
           <ItemFormBuild
             missingInfo={this.state.currentDataNeededFilled && !this.state.items.length ? true : false}
             items={build ? build.items : []}
             handleChange={this.handleChange} />
 
-          <h2>pick champions that work best with this champion</h2>
+          <h2 className={formClasses['form__title']}>champion comp</h2>
+          <p className={formClasses['form__description']}>click on selected champions to remove them</p>
           <CompFormBuild
             missingInfo={this.state.currentDataNeededFilled && !this.state.comp.length ? true : false}
             comp={build ? build.comp : []}
             handleChange={this.handleChange} />
 
-          <h2>write about why this is the best way to use this champion in team fight tactics</h2>
+          <h2 className={formClasses['form__title']}>write about the strategy</h2>
           <ContentFormBuild
             missingInfo={this.state.currentDataNeededFilled && !this.state.content ? true : false}
             content={build ? build.content : ''} 
             handleChange={this.handleChange} />
           <div>
           
-          <button>update</button>
+          <button className={formClasses['button']}>update</button>
           {authError ? <p>{authError}</p> : null}
           {this.state.currentDataNeededFilled ? <p>{this.state.currentDataNeededFilled}</p> : null}
           </div>
         </form>
-      </div>
+      </React.Fragment>
     );
   }
 }
