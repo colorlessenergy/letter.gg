@@ -25,7 +25,7 @@ const updateBuildAuthor = (preValue, newValue) => {
       });
     })
     .catch((err) => {
-      console.log('error fetching builds cloud function ', err)
+      console.log('error fetching builds in cloud function ', err)
     })
 }
 
@@ -42,7 +42,6 @@ exports.updateUserBuildAuthor = functions.firestore
     const newValue = change.after.data();
     const previousValue = change.before.data();
     
-    console.log(newValue, previousValue)
     return updateBuildAuthor(previousValue, newValue);
   })
 

@@ -1,6 +1,5 @@
 export const createBuildAction = (build) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    console.log('creating build');
     const firestore = getFirestore();
     const profile = getState().firebase.profile;
     const authorId = getState().firebase.auth.uid;
@@ -134,7 +133,6 @@ export const editBuildAction = (updatedBuild, history) => {
 
 export const upvoteBuildAction = (likedMetadata) => {
   return (dispatch, getState, { getFirestore }) => {
-    console.log('upvoted successfully', likedMetadata);
     const firestore = getFirestore();
 
     if (likedMetadata.buildId && likedMetadata.userId) {
@@ -150,7 +148,6 @@ export const upvoteBuildAction = (likedMetadata) => {
         })
         .catch((err) => {
           dispatch({ type: 'UPVOTE_BUILD_ERROR', err });
-          console.log('err', err);
         })
     }
   }
@@ -158,7 +155,6 @@ export const upvoteBuildAction = (likedMetadata) => {
 
 export const removeUpvoteBuildAction = (likedMetadata) => {
   return (dispatch, getState, { getFirestore }) => {
-    console.log('removed upvoted successfully', likedMetadata);
     const firestore = getFirestore();
 
     if (likedMetadata.buildId && likedMetadata.userId) {
@@ -174,7 +170,6 @@ export const removeUpvoteBuildAction = (likedMetadata) => {
         })
         .catch((err) => {
           dispatch({ type: 'UPVOTE_BUILD_ERROR', err });
-          console.log('err', err);
         })
     }
   }

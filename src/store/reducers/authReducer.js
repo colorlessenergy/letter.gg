@@ -19,18 +19,15 @@ const authReducer = (state=initState, action) => {
       }
     
     case 'LOGOUT_SUCCESS':
-      console.log('signout success');
       return state;
     
     case 'REGISTER_SUCCESS':
-      console.log('register success')
       return {
         ...state,
         authError: null
       }
 
     case 'REGISTER_ERROR':
-      console.log('register error', action)
       return {
         ...state,
         authError: action.err.message
@@ -38,8 +35,6 @@ const authReducer = (state=initState, action) => {
 
 
     case 'UPDATE_USER_ERROR':
-      console.log('update user error', action.err, action.err.code === 'auth/user-token-expired');
-
       return {
         ...state,
         authError: action.err.message,
@@ -47,7 +42,6 @@ const authReducer = (state=initState, action) => {
       }
     
     case 'UPDATE_USER_SUCCESS':
-      console.log('update user success');
       return {
         ...state,
         // this will be used to redirect the user
@@ -57,8 +51,6 @@ const authReducer = (state=initState, action) => {
       }
 
     case 'REAUTHENTICATE_SUCCESS':
-      console.log('reauthenticate success');
-
       return {
         ...state,
         reauthenticateSuccess: true,
@@ -66,8 +58,6 @@ const authReducer = (state=initState, action) => {
       }
 
     case 'REAUTHENTICATE_ERROR':
-      console.log('reauthenticate ERROR', action.err);
-
       return {
         ...state,
         reauthenticateSuccess: false,
@@ -75,8 +65,6 @@ const authReducer = (state=initState, action) => {
       }
 
     case 'DELETE_SUCCESS':
-      console.log('delete user successfully');
-
       return {
         ...state,
         authError: null,
@@ -85,9 +73,7 @@ const authReducer = (state=initState, action) => {
         reauthenticateSuccess: false
       };
 
-    case 'DELETE_ERROR':
-      console.log('delete user error', action.err);
-      
+    case 'DELETE_ERROR':      
       return {
         ...state,
         accountIsDeleted: false,
@@ -99,7 +85,6 @@ const authReducer = (state=initState, action) => {
     // when they try to change some other senstive data
     // it will make them reauthenticate
     case 'RESET_STATE_UPDATED_USER':
-      console.log('RESETING state');
       return {
         ...state,
         reauthenticateSuccess: false,
