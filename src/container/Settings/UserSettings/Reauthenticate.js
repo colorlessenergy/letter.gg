@@ -10,6 +10,8 @@ import {reauthenticateUser} from '../../../store/actions/authActions';
 import { connect } from 'react-redux';
 
 
+import classes from './UserSettingsForms/UserSettingsForm.module.css';
+
  class Reauthenticate extends Component {
    state = {
      email: '',
@@ -39,39 +41,50 @@ import { connect } from 'react-redux';
 
      return (
        <React.Fragment>
-         <div>
-           <h2>
+         <div className={classes['form-container']}>
+           <h2 className={classes['form__title']}>
              ReAuthentication is required
            </h2>
-           <p>because you tried to change your email or password</p>
+           <p className={classes['form__description']}>
+             When trying to change your account information you have to re-authenticate
+          </p>
+          <form onSubmit={this.handleSubmit}>
+            <div className={classes['form__group']}>
+              <label 
+                className={classes['form__label']}
+                htmlFor="email">
+                Email
+              </label>
+
+              <input 
+                type="email" 
+                id="email" 
+                className={[classes['form__input'], classes['form__input--mb']].join(' ')}
+                placeholder="Email"
+                onChange={this.handleChange} />
+            </div>
+             <div className={classes['form__group']}>
+              <label
+                className={classes['form__label']}
+                htmlFor="password">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                className={[classes['form__input'], classes['form__input--mb']].join(' ')}
+                placeholder="Password"
+                onChange={this.handleChange} />
+            </div>
+            
+            <button className={classes['button']}>
+              reauthenticate
+            </button>
+
+            { this.props.authError ? <p>{ this.props.authError }</p> : null }
+          </form>
          </div>
 
-         <form onSubmit={this.handleSubmit}>
-           <div>
-             <label htmlFor="email">
-               Email:
-             </label>
-             <input 
-              type="email" 
-              id="email" 
-              onChange={this.handleChange} />
-           </div>
-           <div>
-             <label htmlFor="password">
-               Password:
-             </label>
-             <input
-               type="password"
-               id="password"
-               onChange={this.handleChange} />
-           </div>
-
-           <button>
-             reauthenticate
-           </button>
-
-           { this.props.authError ? <p>{ this.props.authError }</p> : null }
-         </form>
        </React.Fragment>
      )
    }
