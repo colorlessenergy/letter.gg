@@ -57,11 +57,9 @@ export const updateUserEmailAction = (updateUser) => {
 
     firebase.auth().currentUser.updateEmail(updateUser.email)
       .then(() => {
-        console.log('update email');
         dispatch({ type: 'UPDATE_USER_SUCCESS' });
       })
       .catch((err) => {
-        console.log(err, 'update email');
         dispatch({ type: 'UPDATE_USER_ERROR', err });
       });
   }
@@ -75,11 +73,9 @@ export const updateUserPasswordAction = (updateUser) => {
     if (updateUser.password) {
       firebase.auth().currentUser.updatePassword(updateUser.password)
         .then(() => {
-          console.log('update password');
           dispatch({ type: 'UPDATE_USER_SUCCESS' });
         })
         .catch((err) => {
-          console.log(err, 'update password')
           dispatch({ type: 'UPDATE_USER_ERROR', err })
         });
     }
@@ -266,7 +262,6 @@ export const DeleteUserAction = () => {
         dispatch({ type: 'DELETE_SUCCESS' })
       })
       .catch((err) => {
-        console.log(err);
         dispatch({ type: 'DELETE_ERROR', err })
       })  
   }
@@ -294,7 +289,6 @@ export const registerAction = (newUser) => {
         newUser.password
       )
       .then((res) => {
-        console.log('reached', res)
         return firestore.collection('users').doc(res.user.uid).set({
           username: newUser.username
         })
@@ -319,7 +313,5 @@ export const registerAction = (newUser) => {
       dispatch({ type: 'REGISTER_ERROR', err });
     })
       
-
-    console.log(newUser, 'Register Action');
   }
 };

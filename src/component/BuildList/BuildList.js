@@ -28,27 +28,18 @@ const BuildList = (props) => {
     buildsList = (
       <div className={classes["builds-container"]}>
         {builds.map((build, index) => {
-          console.log(build);
-
-          console.log(build.createdAt.seconds);
           let date = new Date(build.createdAt.seconds * 1000);
           let dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
           date = date.toLocaleDateString('en-US', dateOptions)
-          console.log(date);
 
           let titleWords = build.title.split('');
           let filteredWords = null;
-          console.log(titleWords);
-          console.log(titleWords.length);
           if (titleWords.length >= 21) {
             filteredWords = titleWords.slice(0, 22);
-            console.log(filteredWords);
             filteredWords = filteredWords.join('') + '...';
           }
           let title = titleWords.join('');
-          console.log(title);
           let newTitle = filteredWords ? filteredWords : title;
-          console.log(newTitle);
 
           let championIcon = require(`../../assets/champion-icons/${build.champion}.png`);
           
