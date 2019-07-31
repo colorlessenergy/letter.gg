@@ -17,9 +17,15 @@ class Register extends Component {
   }
 
   handleChange = (ev) => {
-    this.setState({
-      [ev.target.id]: ev.target.value
-    });
+    if (ev.target.id === 'username') {
+      this.setState({
+        [ev.target.id]: ev.target.value.replace(' ', '_').trim()
+      })
+    } else {
+      this.setState({
+        [ev.target.id]: ev.target.value.trim()
+      });
+    }
   }
 
   render () {
@@ -102,7 +108,6 @@ class Register extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return{ 
     ...state,
     authError: state.auth.authError,
