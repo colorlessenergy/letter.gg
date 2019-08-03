@@ -13,7 +13,7 @@ const NavBar = (props) => {
   // if they are not logged in show the register and login links
   const links = auth.uid ? (
     <React.Fragment>
-      <Link to='/build' className={classes['nav__link']}>Build</Link>
+      <Link to='/build' className={classes['nav__link']}>create</Link>
       <Link to='/' className={classes['nav__link']}>Letter.gg</Link>
       <Link to='/settings' className={classes['nav__link']}>settings</Link>
     </React.Fragment>
