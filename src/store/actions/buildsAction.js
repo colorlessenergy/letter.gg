@@ -166,10 +166,10 @@ export const removeUpvoteBuildAction = (likedMetadata) => {
           upvotes: firestore.FieldValue.increment(-1)
         })
         .then(() => {
-          dispatch({ type: 'UPVOTE_BUILD_SUCCESS' });
+          dispatch({ type: 'DOWNVOTE_BUILD_SUCCESS' });
         })
         .catch((err) => {
-          dispatch({ type: 'UPVOTE_BUILD_ERROR', err });
+          dispatch({ type: 'DOWNVOTE_BUILD_ERROR', err });
         })
     }
   }

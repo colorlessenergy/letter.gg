@@ -45,7 +45,7 @@ class DisplayBuild extends Component {
       let allUsersLikedBuild = props.build.usersLikedBuild;
       let userUID = props.auth.uid;
 
-      if (allUsersLikedBuild.indexOf(userUID)) {
+      if (allUsersLikedBuild.indexOf(userUID) !== -1) {
         return {
           userLikedBuild: true
         };
@@ -441,7 +441,7 @@ class DisplayBuild extends Component {
             <img src={championIcon} alt={build.champion} />
             {
               auth.uid ?
-              (this.state.userLikedBuild ?
+              (!this.state.userLikedBuild ?
               <p onClick={this.handleUpvote} className={[classes['button'], classes['button--pink'], classes['button--large']].join(' ')}>Like</p> :
               <p onClick={this.handleRemoveUpvote} className={[classes['button'], classes['button--pink'], classes['button--large']].join(' ')}>unlike</p>)
               : null

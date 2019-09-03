@@ -96,6 +96,20 @@ const buildReducer = (state=initState, action) => {
         ...state,
         authError: action.err
       }
+
+    case 'DOWNVOTE_BUILD_SUCCESS':
+      console.log('DOWNVOTE build success');
+      return {
+        ...state,
+        authError: null
+      }
+
+    case 'DOWNVOTE_BUILD_ERROR':
+      console.log('DOWNVOTE error', action.err);
+      return {
+        ...state,
+        authError: action.err
+      }
     
 
 
