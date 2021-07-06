@@ -403,7 +403,7 @@ class DisplayBuild extends Component {
                 />
               </div>
               <div>
-                <button className={[classes['button'], classes['button--default'], classes['button--pink'], classes['button--margin-top']].join(' ')}>Submit</button>
+                <button className={[classes['button'], classes['button--default'], classes['button--pink'], classes['button--margin-top']].join(' ')}>submit</button>
               </div>
             </form>
             {/* display replies here! */}
