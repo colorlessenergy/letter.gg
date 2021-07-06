@@ -43,10 +43,10 @@ import classes from './UserSettingsForms/UserSettingsForm.module.css';
        <React.Fragment>
          <div className={classes['form-container']}>
            <h2 className={classes['form__title']}>
-             ReAuthentication is required
+             Reauthentication is required
            </h2>
            <p className={classes['form__description']}>
-             When trying to change your account information you have to re-authenticate
+             When trying to change your account information you have to reauthenticate
           </p>
           <form onSubmit={this.handleSubmit}>
             <div className={classes['form__group']}>
