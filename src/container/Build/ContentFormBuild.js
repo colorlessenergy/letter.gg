@@ -75,7 +75,7 @@ class ContentFormBuild extends Component {
       <div className={ classes['form__group'] }>
         <label
             htmlFor='content'
-            className={ classes['form__label'] }>content</label>
+            className={ classes['form__label'] }>Content</label>
         <ReactQuill
           id="content"
           modules={this.modules}
