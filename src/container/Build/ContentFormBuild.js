@@ -72,14 +72,15 @@ class ContentFormBuild extends Component {
 
   render () {
     return (
-      <div>
-        <label htmlFor='content'></label>
+      <div className={ classes['form__group'] }>
+        <label
+            htmlFor='content'
+            className={ classes['form__label'] }>content</label>
         <ReactQuill
           id="content"
           modules={this.modules}
           formats={this.formats}
           value={this.state.content}
-          className={classes['form__content']}
           placeholder='write about why this is the best way to use this champion in team fight tactics'
           onChange={this.onQuillChange} />
         {/*
@@ -96,7 +97,7 @@ class ContentFormBuild extends Component {
         */}
         {
           !this.state.currentDataNeededFilled && this.props.missingInfo ?
-            <p className={[classes['error'], classes['error--ml']].join(' ')}>you need to write something!</p> :
+            <p className={ classes['error'] }>you need to write something!</p> :
             null
         }
       </div>

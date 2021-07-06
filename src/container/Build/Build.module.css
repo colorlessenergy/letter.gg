@@ -23,7 +23,7 @@
   margin-top: 10px;
   margin-bottom: 5px;
   
-  color: #9F9F9F;
+  color: #6B7280;
 }
 
 .form__label,
@@ -44,21 +44,21 @@
   letter-spacing: 1px;
 }
 
-.form__content {
-  margin: 0 10px;
-}
-
 .button {
   display: block;
   background-color: #FE7BB4;
   border: none;
+  border-radius: 10px;
   margin: 30px auto;
   outline: none;
   width: 80%;
   padding: 20px 0;
 
   color: #fff;
+  cursor: pointer;
   font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .images {
@@ -74,10 +74,14 @@
 .images__image {
   height: 64px;
   width: 64px; 
+
+  cursor: pointer;
 }
 
 .images__picked {
   margin-top: 10px;
+
+  cursor: pointer;
 }
 
 .images__picked--container {
