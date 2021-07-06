@@ -1,16 +1,15 @@
 .form__group {
-    margin: 0 10px;
+  margin: 0 10px;
 }
 
 .form__title {
-  margin: 16px 25px;
+  margin: 16px 10px;
 }
 
 .form__description {
   color: #9F9F9F;
-  margin: 8px 25px 10px 25px;
+  margin: 8px 10px 10px 10px;
   font-size: 14px;
-
 }
 
 .form__label {
@@ -109,6 +108,14 @@
   .form__group {
     margin-bottom: 40px;
     margin-left: 25px;
+  }
+
+  .form__title {
+    margin: 16px 25px;
+  }
+
+  .form__description {
+    margin: 8px 25px 10px 25px;
   }
 
   .form__input {
