@@ -61,7 +61,6 @@ class Build extends Component {
 
     if (!auth.uid) return <Redirect to='/login' />
 
-
     return (
       <form className={classes['form']} onSubmit={this.handleSubmit}>
         <h2 className={classes['form__title']}>create a title for your build</h2>

@@ -48,7 +48,7 @@ class TitleFormBuild extends Component {
   render() {
     return (
       <div className={classes['form__group']}>
-        <label className={classes['form__label']} htmlFor='title'>Title: </label>
+        <label className={classes['form__label']} htmlFor='title'>Title</label>
         <input
           id='title'
           type='text'

@@ -138,7 +138,7 @@ class ItemsFormBuild extends Component {
     return (
       <React.Fragment>
         <div className={classes['form__group']}>
-          <label className={classes['form__label']} htmlFor='item'>item</label>
+          <label className={ classes['form__label'] } htmlFor='item'>Item</label>
           <input
             id='item'
             type='text'

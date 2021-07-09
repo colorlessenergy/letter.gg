@@ -1,29 +1,22 @@
 .form__group {
-  margin-bottom: 33px;
-  margin-left: 35px;
-}
-
-.form__group {
-  margin-bottom: 40px;
-  margin-left: 25px;
+  margin: 0 10px;
 }
 
 .form__title {
-  margin: 16px 25px;
+  margin: 16px 10px;
 }
 
 .form__description {
   color: #9F9F9F;
-  margin: 8px 25px 10px 25px;
+  margin: 8px 10px 10px 10px;
   font-size: 14px;
-
 }
 
 .form__label {
   margin-top: 10px;
   margin-bottom: 5px;
   
-  color: #9F9F9F;
+  color: #6B7280;
 }
 
 .form__label,
@@ -36,7 +29,7 @@
   background-color: #E4DBE3;
   border: none;
   padding: 10px;
-  width: 275px;
+  width: 320px;
   height: 45px;
 
   color:#000;
@@ -44,25 +37,24 @@
   letter-spacing: 1px;
 }
 
-.form__content {
-  margin: 0 10px;
-}
-
 .button {
   display: block;
   background-color: #FE7BB4;
   border: none;
+  border-radius: 10px;
   margin: 30px auto;
   outline: none;
   width: 80%;
   padding: 20px 0;
 
   color: #fff;
+  cursor: pointer;
   font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .images {
-  width: 266px;
   max-height: 200px;
   margin-top: 18px;
   
@@ -74,14 +66,17 @@
 .images__image {
   height: 64px;
   width: 64px; 
+
+  cursor: pointer;
 }
 
 .images__picked {
   margin-top: 10px;
+
+  cursor: pointer;
 }
 
 .images__picked--container {
-  width: 266px;
   margin-top: 10px;
 
   display: flex;
@@ -110,11 +105,20 @@
     margin: 0 auto;
   }
 
-  .form__input {
-    width: 100%;
+  .form__group {
+    margin-bottom: 40px;
+    margin-left: 25px;
   }
 
-  .images, .images__picked--container  {
+  .form__title {
+    margin: 16px 25px;
+  }
+
+  .form__description {
+    margin: 8px 25px 10px 25px;
+  }
+
+  .form__input {
     width: 100%;
   }
 }
